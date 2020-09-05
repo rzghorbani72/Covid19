@@ -1,15 +1,15 @@
 import {takeLatest, put, call, select} from 'redux-saga/effects'
 import {FETCH_DATA} from './types'
-import {request} from '../../../services/request';
-import {api} from '../../../services/api';
+import {request} from '../../services/request';
+import {api} from '../../services/api';
 import {isEmpty, isArray, take} from 'lodash'
 import {fetchEachCountryTimeLineDataSuccess, fetchEachCountryTimeLineDataFail} from './actions';
 
-function* fetchData() {
+function* fetchData({payload:{code}}) {
     try {
-        let objective_data = yield call(request, 'get', api.getCardList());
-        if (!isEmpty(objective_data) && isArray(objective_data)) {
-            yield put(fetchEachCountryTimeLineDataSuccess(cards))
+        let time_line_data = yield call(request, 'get', api.getEachCountryTimeLineApi(code));
+        if (!isEmpty(time_line_data) && isArray(time_line_data)) {
+            yield put(fetchEachCountryTimeLineDataSuccess(time_line_data))
         } else {
             yield put(fetchEachCountryTimeLineDataFail());
         }

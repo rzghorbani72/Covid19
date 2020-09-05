@@ -6,7 +6,7 @@ const initialState = {
     loading: false
 };
 
-export default function eachCountryTimeLine(state = initialState, action) {
+export default function globeStats(state = initialState, action) {
     switch (action.type) {
         case FETCH_DATA:
             return {

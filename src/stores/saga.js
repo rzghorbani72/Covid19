@@ -1,8 +1,16 @@
 import {all} from 'redux-saga/effects';
-import GetLists from "./eachCountryTimeLine/saga";
+import GetEachCountryTimeLine from "./eachCountryTimeLine/saga";
+import GetAllCountryTimeLine from "./allCountriesTimeLine/saga";
+import GetGlobeStats from "./globeStats/saga";
+import GetProvinceGeo from "./provinceGeo/saga";
+import GetRegionIsoNames from "./regionsIsoNames/saga";
 
 export default function* AppSaga() {
     yield all([
-        GetLists(),
+        GetAllCountryTimeLine(),
+        GetEachCountryTimeLine(),
+        GetGlobeStats(),
+        GetProvinceGeo(),
+        GetRegionIsoNames()
     ]);
 }

@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function HomeContainer() {
+export default function HomePageContainer() {
     return (<></>)
 }
