@@ -5,9 +5,9 @@ import {api} from '../../services/api';
 import {isEmpty, isArray, take} from 'lodash'
 import {fetchEachCountryTimeLineDataSuccess, fetchEachCountryTimeLineDataFail} from './actions';
 
-function* fetchData({payload:{code}}) {
+function* fetchData({payload:{country}}) {
     try {
-        let time_line_data = yield call(request, 'get', api.getEachCountryTimeLineApi(code));
+        let time_line_data = yield call(request, 'get', api.getEachCountryTimeLineThevirusApi(country));
         if (!isEmpty(time_line_data) && isArray(time_line_data)) {
             yield put(fetchEachCountryTimeLineDataSuccess(time_line_data))
         } else {

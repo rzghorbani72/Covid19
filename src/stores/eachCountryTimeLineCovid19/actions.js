@@ -2,20 +2,20 @@ import {
     FETCH_DATA, FETCH_SUCCESS, FETCH_FAIL
 } from './types';
 
-export function fetchAllCountryTimeLineData(code) {
+export function fetchEachCountryCovid19Data(code) {
     return {
         type:FETCH_DATA,
         payload:{code}
     }
 }
-export function fetchAllCountryTimeLineDataSuccess(data) {
+export function fetchEachCountryCovid19DataSuccess(data) {
     return {
         type:FETCH_SUCCESS,
         payload:data
     }
 
 }
-export function fetchAllCountryTimeLineDataFail() {
+export function fetchEachCountryCovid19DataFail() {
     return {
         type:FETCH_FAIL
     }

@@ -1,16 +1,20 @@
 import {all} from 'redux-saga/effects';
-import GetEachCountryTimeLine from "./eachCountryTimeLine/saga";
-import GetAllCountryTimeLine from "./allCountriesTimeLine/saga";
+import GetEachCountryTimeLineCovid19 from "./eachCountryTimeLineCovid19/saga";
+import GetEachCountryTimeLineThevirus from "./eachCountryTimeLineThevirus/saga";
 import GetGlobeStats from "./globeStats/saga";
+import GetCountries from "./countries/saga";
 import GetProvinceGeo from "./provinceGeo/saga";
 import GetRegionIsoNames from "./regionsIsoNames/saga";
+import GetSummary from "./summary/saga";
 
 export default function* AppSaga() {
     yield all([
-        GetAllCountryTimeLine(),
-        GetEachCountryTimeLine(),
+        GetEachCountryTimeLineCovid19(),
+        GetEachCountryTimeLineThevirus(),
         GetGlobeStats(),
         GetProvinceGeo(),
-        GetRegionIsoNames()
+        GetRegionIsoNames(),
+        GetSummary(),
+        GetCountries()
     ]);
 }
