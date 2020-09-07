@@ -2,10 +2,9 @@ import {
     FETCH_DATA, FETCH_SUCCESS, FETCH_FAIL
 } from './types';
 
-export function fetchSummaryData(code) {
+export function fetchSummaryData() {
     return {
-        type:FETCH_DATA,
-        payload:{code}
+        type:FETCH_DATA
     }
 }
 export function fetchSummaryDataSuccess(data) {

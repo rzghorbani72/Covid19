@@ -17,7 +17,7 @@ export default function summary(state = initialState, action) {
             return {
                 ...state,
                 data:action.payload,
-                loading: true
+                loading: false
             }
         case FETCH_FAIL:
             return {

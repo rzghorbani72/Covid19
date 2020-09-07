@@ -1,3 +1,3 @@
-export const FETCH_DATA = 'globeStats/fetch_data';
-export const FETCH_SUCCESS = 'globeStats/fetch_success';
-export const FETCH_FAIL = 'globeStats/fetch_fail';
+export const FETCH_DATA = 'globeSummaryStatsTable/fetch_data';
+export const FETCH_SUCCESS = 'globeSummaryStatsTable/fetch_success';
+export const FETCH_FAIL = 'globeSummaryStatsTable/fetch_fail';
