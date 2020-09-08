@@ -7,7 +7,7 @@ import GlobeMap from "../components/globeMap";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        // backgroundColor:'#1c54b2'
+        backgroundColor:'#42a5f5'
     },
     paper: {
         padding: theme.spacing(2),
