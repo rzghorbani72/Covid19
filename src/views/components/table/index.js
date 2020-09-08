@@ -34,6 +34,9 @@ const useRowStyles = makeStyles({
     table: {
         marginTop: 40
     },
+    textField: {
+        width: 115
+    }
 });
 
 function createData(row) {
@@ -77,7 +80,7 @@ function createTableDataStructure(data) {
     });
 
     data.map(item => {
-        if (_.has(item, 'Date') && _.endsWith(item.Date,'Z')) {
+        if (_.has(item, 'Date') && _.endsWith(item.Date, 'Z')) {
             item.Date = moment
                 .utc(item.Date)
                 .startOf("seconds")
@@ -121,11 +124,20 @@ export default function CollapsibleTable(props) {
                                     if (item.title === 'Country') {
                                         return (<TableCell align="center">
                                             <TextField id="filled-search"
-                                                       onChange={(e) => filterTableRows(e.target.value)}
                                                        label="Search Country"
+                                                       InputProps={{
+                                                           style: {fontSize: 13}
+                                                       }}
+                                                       InputLabelProps={{
+                                                           style: {fontSize: 13}
+                                                       }}
+                                                       className={classes.textField}
+                                                       onChange={(e) => filterTableRows(e.target.value)}
                                                        type="search"
                                                        variant="filled"/>
                                         </TableCell>)
+                                    } else if (item.title === 'Date') {
+                                        return <TableCell align="center">LastUpdateDate</TableCell>
                                     } else {
                                         return <TableCell align="center">{item.title}</TableCell>
                                     }
