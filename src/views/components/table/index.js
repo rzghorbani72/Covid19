@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import ImportExportIcon from '@material-ui/icons/ImportExport';
 import TextField from '@material-ui/core/TextField';
 import moment from "moment";
 
@@ -36,12 +37,16 @@ const useRowStyles = makeStyles({
     },
     textField: {
         width: 115
+    },
+    tableCell: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        height: 55
+    },
+    TableHeadCell: {
+        cursor: 'pointer'
     }
 });
-
-function createData(row) {
-    return {...row}
-}
 
 function Row(props) {
     const {row} = props;
@@ -74,9 +79,9 @@ function Row(props) {
 
 function createTableDataStructure(data) {
     let table_column = [], table_rows = [];
-
+    const ignoreColumns = ["Premium", "Slug", "CountryCode"]
     _.mapKeys(data[0], (value, key) => {
-        !_.includes(["Premium", "Slug"], key) && table_column.push({title: key, field: key})
+        !_.includes(ignoreColumns, key) && table_column.push({title: key, field: key})
     });
 
     data.map(item => {
@@ -86,14 +91,15 @@ function createTableDataStructure(data) {
                 .startOf("seconds")
                 .fromNow()
         }
-        createData(_.omit(item, ["Premium", "Slug", "CountryCode"]))
-        table_rows.push(_.omit(item, ["Premium", "Slug"]))
+        table_rows.push(_.omit(item, ignoreColumns))
     });
     return {columns: table_column, data: table_rows}
 }
 
+
 export default function CollapsibleTable(props) {
     const classes = useRowStyles();
+    const [ascending, setAscending] = useState({TotalDeaths: true})
     const [tableData, setTableData] = useState({
         columns: [],
         data: [],
@@ -104,6 +110,20 @@ export default function CollapsibleTable(props) {
             const filtered = _.filter(props.data, obj => obj.Country.match(regex))
             setTableData(createTableDataStructure(filtered));
         }, 500);
+    }
+    const sortArray = (by = 'TotalDeaths') => {
+        let isAsc = true;
+        if (_.has(ascending, by)) {
+            setAscending(!ascending[by]);
+            isAsc = !ascending[by];
+        } else {
+            let obj = {}
+            obj[by] = true
+            setAscending(obj);
+            isAsc = true;
+        }
+        const sorted = _.sortBy(tableData.data, [by]);
+        setTableData(createTableDataStructure(isAsc ? sorted : _.reverse(sorted)));
     }
     useEffect(() => {
         const {data} = props;
@@ -121,25 +141,37 @@ export default function CollapsibleTable(props) {
                             <TableRow>
                                 <TableCell/>
                                 {tableData.columns.map(item => {
-                                    if (item.title === 'Country') {
-                                        return (<TableCell align="center">
-                                            <TextField id="filled-search"
-                                                       label="Search Country"
-                                                       InputProps={{
-                                                           style: {fontSize: 13}
-                                                       }}
-                                                       InputLabelProps={{
-                                                           style: {fontSize: 13}
-                                                       }}
-                                                       className={classes.textField}
-                                                       onChange={(e) => filterTableRows(e.target.value)}
-                                                       type="search"
-                                                       variant="filled"/>
-                                        </TableCell>)
-                                    } else if (item.title === 'Date') {
-                                        return <TableCell align="center">LastUpdateDate</TableCell>
+                                    if (tableData.data.length > 1) {
+                                        switch (item.title) {
+                                            case 'Country':
+                                                return (<TableCell align="center">
+                                                    <TextField id="filled-search"
+                                                               label="Search Country"
+                                                               InputProps={{
+                                                                   style: {fontSize: 13}
+                                                               }}
+                                                               InputLabelProps={{
+                                                                   style: {fontSize: 13}
+                                                               }}
+                                                               className={classes.textField}
+                                                               onChange={(e) => filterTableRows(e.target.value)}
+                                                               type="search"
+                                                               variant="filled"/>
+                                                </TableCell>)
+                                            case 'Date' :
+                                                return <TableCell align="center"
+                                                                  className={classes.TableHeadCell}>LastUpdateDate</TableCell>
+                                            default :
+                                                return <TableCell align="center" className={classes.TableHeadCell}
+                                                                  onClick={() => sortArray(item.title)}>
+                                                    <div className={classes.tableCell}><ImportExportIcon
+                                                        style={{color: '#b1b3b1'}}/>{item.title}
+                                                    </div>
+                                                </TableCell>
+                                        }
                                     } else {
-                                        return <TableCell align="center">{item.title}</TableCell>
+                                        return <TableCell align="center"
+                                                          className={classes.TableHeadCell}>{item.title}</TableCell>
                                     }
                                 })}
                             </TableRow>
