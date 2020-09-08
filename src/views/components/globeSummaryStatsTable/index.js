@@ -22,6 +22,7 @@ function GlobeStats(props) {
         }
     }, [props.summary.data]);
 
+
     return (
         <div>
             {!_.isEmpty(globeCountriesStats) && <Table data={[globeCountriesStats.Global]}/>}
