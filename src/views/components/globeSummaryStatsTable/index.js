@@ -6,8 +6,13 @@ import _ from 'lodash';
 import {makeStyles} from "@material-ui/core/styles";
 const useStyles = makeStyles({
     root: {
-       display:'flex'
+       display:'flex',
     },
+    h2:{
+        fontSize:30,
+        color:'white',
+        marginTop:80
+    }
 });
 function GlobeStats(props) {
     const classes = useStyles();
@@ -25,7 +30,9 @@ function GlobeStats(props) {
 
     return (
         <div>
+            <h2 className={classes.h2}>Global Stats</h2>
             {!_.isEmpty(globeCountriesStats) && <Table data={[globeCountriesStats.Global]}/>}
+            <h2 className={classes.h2}>Countries Stats</h2>
             {!_.isEmpty(globeCountriesStats) && <Table data={globeCountriesStats.Countries}/>}
         </div>
     )

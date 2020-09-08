@@ -17,6 +17,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import ImportExportIcon from '@material-ui/icons/ImportExport';
 import TextField from '@material-ui/core/TextField';
 import moment from "moment";
+import {ui} from '../../../constants/config'
 
 const useRowStyles = makeStyles({
     root: {
@@ -60,7 +61,11 @@ function Row(props) {
                         {open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
                     </IconButton>
                 </TableCell>
-                {_.keys(row).map(key => <TableCell align="center">{String(row[key])}</TableCell>)}
+                {_.keys(row).map(key => <TableCell align="center"
+                                                   style={{
+                                                       color: ui.getTextColor(key),
+                                                       fontWeight: props.type === 'glob' ? 'bolder' : 'normal'
+                                                   }}>{String(row[key].toLocaleString())}</TableCell>)}
             </TableRow>
             <TableRow>
                 <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={_.keys(row).length + 1}>
@@ -141,7 +146,14 @@ export default function CollapsibleTable(props) {
                             <TableRow>
                                 <TableCell/>
                                 {tableData.columns.map(item => {
-                                    if (tableData.data.length > 1) {
+                                    if (props.data.length === 1) {
+                                        return <TableCell align="center"
+                                                          style={{
+                                                              color: ui.getTextColor(item.title),
+                                                              fontWeight: 'bold'
+                                                          }}
+                                                          className={classes.TableHeadCell}>{item.title}</TableCell>
+                                    } else {
                                         switch (item.title) {
                                             case 'Country':
                                                 return (<TableCell align="center">
@@ -160,25 +172,24 @@ export default function CollapsibleTable(props) {
                                                 </TableCell>)
                                             case 'Date' :
                                                 return <TableCell align="center"
+                                                                  style={{color: ui.getTextColor(item.title)}}
                                                                   className={classes.TableHeadCell}>LastUpdateDate</TableCell>
                                             default :
                                                 return <TableCell align="center" className={classes.TableHeadCell}
+                                                                  style={{color: ui.getTextColor(item.title)}}
                                                                   onClick={() => sortArray(item.title)}>
                                                     <div className={classes.tableCell}><ImportExportIcon
                                                         style={{color: '#b1b3b1'}}/>{item.title}
                                                     </div>
                                                 </TableCell>
                                         }
-                                    } else {
-                                        return <TableCell align="center"
-                                                          className={classes.TableHeadCell}>{item.title}</TableCell>
                                     }
                                 })}
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {tableData.data.map((row, index) => (
-                                <Row key={index} row={row}/>
+                                <Row key={index} row={row} type={props.data.length === 1 ? 'glob' : 'countries'}/>
                             ))}
                         </TableBody>
                     </Table>
