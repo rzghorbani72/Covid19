@@ -18,7 +18,7 @@ import moment from "moment";
 import {connect} from 'react-redux'
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
-import {fetchEachCountryTimeLineData} from '../../../stores/eachCountryTimeLineThevirus/actions'
+import {fetchEachCountryTimeLineData} from '../../../stores/eachCountryTimeLine/actions'
 import {ui} from '../../../constants/config';
 
 am4core.useTheme(am4themes_myTheme);
@@ -180,7 +180,7 @@ function CollapsibleTable(props) {
                                                               style={{
                                                                   color: ui.getTextColor(item.title),
                                                                   fontWeight: 'bold',
-                                                                  fontSize:16
+                                                                  fontSize: 16
                                                               }}
                                                               className={classes.TableHeadCell}>{item.title}</TableCell>
                                         } else {
@@ -300,6 +300,6 @@ function renderChart(values, code) {
 }
 
 const mapStateToProps = state => ({
-    eachCountryTimeLine: state.eachCountryTimeLineThevirus
+    eachCountryTimeLine: state.eachCountryTimeLine
 });
 export default connect(mapStateToProps)(CollapsibleTable)
