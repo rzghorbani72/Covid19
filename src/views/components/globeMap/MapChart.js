@@ -12,18 +12,9 @@ import {fetchSummaryData} from "../../../stores/summary/actions";
 // const geoUrl =
 //     "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
 
-const rounded = num => {
-    if (num > 1000000000) {
-        return Math.round(num / 100000000) / 10 + "Bn";
-    } else if (num > 1000000) {
-        return Math.round(num / 100000) / 10 + "M";
-    } else {
-        return Math.round(num / 100) / 10 + "K";
-    }
-};
-const toolTipCreator = (obj) =>{
-    const info = _.isEmpty(obj) ? 'No Data' : `NewDeaths : ${obj.NewDeaths.toLocaleString()}`
-    return info
+
+const toolTipCreator = (obj) => {
+    return _.isEmpty(obj) ? 'No Data' : `[NewDeaths: ${obj.NewDeaths.toLocaleString()} ]  [NewCase: ${obj.NewConfirmed.toLocaleString()} ]`
 }
 const MapChart = (props) => {
     const {setTooltipContent} = props;
@@ -35,19 +26,13 @@ const MapChart = (props) => {
             else summary.data !== countriesStats && setCountriesStats(summary.data.Countries)
         }
     }, [props.summary.data]);
-    const getCountryDetails = (country_name=null) => {
-        if(!_.isEmpty(country_name)) {
-            const foundCountry = _.find(countriesStats, {Country: country_name})
+    const getCountryDetails = (country_code = null) => {
+        if (!_.isEmpty(country_code)) {
+            const foundCountry = _.find(countriesStats, {CountryCode: country_code})
             if (!_.isEmpty(foundCountry)) {
                 return toolTipCreator(foundCountry)
             } else {
-                const regex = new RegExp(`(${country_name}).*`, "gi");
-                const filtered = _.filter(countriesStats, obj => obj.Country.match(regex))
-                if(!_.isEmpty(filtered)){
-                    return toolTipCreator(foundCountry)
-                }else{
-                    return toolTipCreator(null)
-                }
+                return toolTipCreator(null)
             }
         }
     }
@@ -62,9 +47,9 @@ const MapChart = (props) => {
                                 key={geo.rsmKey}
                                 geography={geo}
                                 onMouseEnter={() => {
-                                    const {NAME, POP_EST} = geo.properties;
+                                    const {NAME, ISO_A2} = geo.properties;
                                     // setTooltipContent(`${NAME} — ${rounded(POP_EST)}`);
-                                    setTooltipContent(`${NAME} — ${getCountryDetails(NAME)}`);
+                                    setTooltipContent(`${NAME} — ${getCountryDetails(ISO_A2)}`);
                                 }}
                                 onMouseLeave={() => {
                                     setTooltipContent("");

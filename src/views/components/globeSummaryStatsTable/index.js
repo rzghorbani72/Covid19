@@ -4,16 +4,21 @@ import {fetchSummaryData} from '../../../stores/summary/actions';
 import Table from '../table'
 import _ from 'lodash';
 import {makeStyles} from "@material-ui/core/styles";
+
 const useStyles = makeStyles({
     root: {
-       display:'flex',
+        display: 'flex',
+        flexDirection: 'column'
     },
-    h2:{
-        fontSize:30,
-        color:'white',
-        marginTop:80
+    h2: {
+        fontSize: 30,
+        color: 'white',
+        marginTop: 80,
+        display: 'flex',
+        justifyContent: 'center',
     }
 });
+
 function GlobeStats(props) {
     const classes = useStyles();
 
@@ -29,7 +34,7 @@ function GlobeStats(props) {
 
 
     return (
-        <div>
+        <div className={classes.root}>
             <h2 className={classes.h2}>Global Stats</h2>
             {!_.isEmpty(globeCountriesStats) && <Table data={[globeCountriesStats.Global]}/>}
             <h2 className={classes.h2}>Countries Stats</h2>
