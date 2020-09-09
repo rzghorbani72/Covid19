@@ -9,23 +9,26 @@ import IconButton from "@material-ui/core/IconButton";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import {ui} from "../../../constants/config";
+import LoadingImage from '../../assets/image/loader.gif'
 import Collapse from "@material-ui/core/Collapse";
 
 export function Row(props) {
     const {row} = props;
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [selectedCountryCode, setSelectedCountryCode] = useState(null)
     const classes = useRowStyles();
     const fetchCountryChart = (code) => {
         const {dispatch} = props
         setOpen(!open)
-        if(open){
+        if (!open) {
             setSelectedCountryCode(code)
             dispatch(fetchEachCountryTimeLineData(code));
         }
     }
     useEffect(() => {
-        const {eachCountryTimeLine} = props
+        const {eachCountryTimeLine} = props;
+        setLoading(eachCountryTimeLine.loading);
         if (!eachCountryTimeLine.loading && !_.isEmpty(eachCountryTimeLine.data)) {
             if (eachCountryTimeLine.data[0]['CountryCode'] === selectedCountryCode) renderChart(eachCountryTimeLine.data, selectedCountryCode)
         }
@@ -54,6 +57,7 @@ export function Row(props) {
             <TableRow>
                 <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={_.keys(row).length + 1}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
+                        <div className={classes.loading}> {loading && <img width={100} height={100} src={LoadingImage}/>}</div>
                         <div id={`Report_Chart_${row.CountryCode}`}/>
                     </Collapse>
                 </TableCell>

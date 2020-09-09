@@ -2,8 +2,6 @@ import React, {useEffect, useState} from 'react';
 import _ from 'lodash';
 
 //material-ui components
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -11,16 +9,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import ImportExportIcon from '@material-ui/icons/ImportExport';
 import TextField from '@material-ui/core/TextField';
 
 import moment from "moment";
 import {connect} from 'react-redux'
+
 import {useRowStyles} from './Style'
-import {renderChart} from './ChartRenderer';
-import {fetchEachCountryTimeLineData} from '../../../stores/eachCountryTimeLine/actions'
 import {ui} from '../../../constants/config';
 import {Row} from './Row'
 
@@ -59,7 +54,8 @@ function CollapsibleTable(props) {
     useEffect(() => {
         const {data} = props;
         if (!_.isEmpty(data) && _.isArray(data)) {
-            setTableData(createTableDataStructure(data));
+            const sorted = _.reverse(_.sortBy(data, "NewDeaths"));
+            setTableData(createTableDataStructure(sorted));
         }
     }, [props.data]);
 

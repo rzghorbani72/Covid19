@@ -8,7 +8,7 @@ export const useRowStyles = makeStyles({
         },
     },
     container: {
-        maxHeight: 490,
+        maxHeight: 690,
         overflowY: 'scroll !important'
     },
     tableHead: {
@@ -27,5 +27,10 @@ export const useRowStyles = makeStyles({
     },
     TableHeadCell: {
         cursor: 'pointer'
+    },
+    loading: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
