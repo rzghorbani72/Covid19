@@ -18,7 +18,7 @@ export default function eachCountryTimeLineThevirus(state = initialState, action
             return {
                 ...state,
                 data:action.payload,
-                loading: true
+                loading: false
             }
         case FETCH_FAIL:
             return {

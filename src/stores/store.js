@@ -16,5 +16,5 @@ const middlewares = [sagaMiddleware];
 const enhancers = [applyMiddleware(...middlewares)];
 let store = createStore(persistedReducer, ...enhancers);
 sagaMiddleware.run(rootSaga);
-let persistor = persistStore(store);
-export { store,persistor, sagaMiddleware };
+//let persistor = persistStore(store);
+export { store, sagaMiddleware };

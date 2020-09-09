@@ -1,7 +1,8 @@
-import {base_url_thevirustracker,base_url_covid,base_url_covid19api} from '../constants/config'
+import {base_url_thevirustracker,base_url_covid,base_url_covid19api,base_url_local} from '../constants/config'
 export const api = {
     getEachCountryTimeLineThevirusApi : (countryCode)=>`${base_url_thevirustracker}/free-api?countryTimeline=${countryCode}`,
     getGlobeStatsApi : ()=>`${base_url_thevirustracker}/free-api?global=stats`,
+    getTimeLine:(code)=>`${base_url_covid19api}/dayone/country/${code}`,
     // getAllCountriesTimeLineThevirusApi : () => `${base_url_thevirustracker}/timeline/map-data.json`,
     getRegionsIsoNameApi : () => `${base_url_covid}/api/regions`,
     getProvinceLatLangApi : (iso) => `${base_url_covid}/api/provinces/${iso}`,
