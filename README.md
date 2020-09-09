@@ -1,4 +1,4 @@
-# Covid19 data visualization example project
+# Covid19 statistics and data visualization project
 
 this web application helps users to see and follow covid19 data around the world
 
