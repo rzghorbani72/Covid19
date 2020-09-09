@@ -69,8 +69,10 @@ function Row(props) {
     const fetchCountryChart = (code) => {
         const {dispatch} = props
         setOpen(!open)
-        setSelectedCountryCode(code)
-        dispatch(fetchEachCountryTimeLineData(code));
+        if(open){
+            setSelectedCountryCode(code)
+            dispatch(fetchEachCountryTimeLineData(code));
+        }
     }
     useEffect(() => {
         const {eachCountryTimeLine} = props
