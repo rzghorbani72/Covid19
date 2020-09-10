@@ -27,7 +27,13 @@ function CollapsibleTable(props) {
     const classes = useRowStyles();
     const [ascending, setAscending] = useState({TotalDeaths: true})
     const [tableData, setTableData] = useState({
-        columns: [],
+        columns: [
+            {title: "NewConfirmed", field: "NewConfirmed"}
+            , {title: "TotalConfirmed", field: "TotalConfirmed"}
+            , {title: "NewDeaths", field: "NewDeaths"}
+            , {title: "TotalDeaths", field: "TotalDeaths"}
+            , {title: "NewRecovered", field: "NewRecovered"}
+            , {title: "TotalRecovered", field: "TotalRecovered"}],
         data: [],
     });
     const filterTableRows = (country) => {
@@ -35,6 +41,8 @@ function CollapsibleTable(props) {
         setTimeout(() => {
             const filtered = _.filter(props.data, obj => obj.Country.match(regex))
             filtered.map(item => item.open = false)
+            let sorted = _.sortBy(filtered, "NewDeaths");
+            sorted.map(item => item.open = false)
             setTableData(createTableDataStructure(filtered));
         }, 500);
     }
@@ -56,7 +64,7 @@ function CollapsibleTable(props) {
     const openRowCollapse = code => {
         const rowIndex = _.findIndex(tableData.data, {CountryCode: code});
         const newRows = [...tableData.data];
-        newRows.map((item, key) => key === rowIndex && _.has(item,'open') ? item.open = !item.open : item.open = key === rowIndex)
+        newRows.map((item, key) => key === rowIndex && _.has(item, 'open') ? item.open = !item.open : item.open = key === rowIndex)
         setTableData(createTableDataStructure(newRows));
     }
     useEffect(() => {
@@ -76,10 +84,10 @@ function CollapsibleTable(props) {
                         <TableHead>
                             <TableRow>
                                 <TableCell/>
-                                {tableData.columns.map(item => {
-                                    if (!_.includes(['CountryCode','open'],item.title)) {
+                                {tableData.columns.map((item, key) => {
+                                    if (!_.includes(['CountryCode', 'open'], item.title)) {
                                         if (props.data.length === 1) {
-                                            return <TableCell align="center"
+                                            return <TableCell key={key} align="center"
                                                               style={{
                                                                   color: ui.getTextColor(item.title),
                                                                   fontWeight: 'bold',
@@ -89,14 +97,14 @@ function CollapsibleTable(props) {
                                         } else {
                                             switch (item.title) {
                                                 case 'Country':
-                                                    return (<TableCell align="center">
+                                                    return (<TableCell key={key} align="center">
                                                         <TextField id="filled-search"
                                                                    label="Search Country"
                                                                    InputProps={{
-                                                                       style: {fontSize: 13}
+                                                                       style: {fontSize: 13, color: '#E91E63'}
                                                                    }}
                                                                    InputLabelProps={{
-                                                                       style: {fontSize: 13}
+                                                                       style: {fontSize: 13, color: '#E91E63'}
                                                                    }}
                                                                    className={classes.textField}
                                                                    onChange={(e) => filterTableRows(e.target.value)}
@@ -104,11 +112,12 @@ function CollapsibleTable(props) {
                                                                    variant="filled"/>
                                                     </TableCell>)
                                                 case 'Date' :
-                                                    return <TableCell align="center"
+                                                    return <TableCell key={key} align="center"
                                                                       style={{color: ui.getTextColor(item.title)}}
                                                                       className={classes.TableHeadCell}>LastUpdateDate</TableCell>
                                                 default :
-                                                    return <TableCell align="center" className={classes.TableHeadCell}
+                                                    return <TableCell key={key} align="center"
+                                                                      className={classes.TableHeadCell}
                                                                       style={{color: ui.getTextColor(item.title)}}
                                                                       onClick={() => sortArray(item.title)}>
                                                         <div className={classes.tableCell}><ImportExportIcon
@@ -122,10 +131,11 @@ function CollapsibleTable(props) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {tableData.data.map((row, index) => (
+                            {tableData.data.map((row, key) => (
                                 <Row
                                     openRowCollapse={openRowCollapse}
-                                    key={index} {...props} row={row}
+                                    key={key} {...props}
+                                    row={row}
                                     type={props.data.length === 1 ? 'glob' : 'countries'}/>
                             ))}
                         </TableBody>
@@ -152,6 +162,7 @@ function createTableDataStructure(data) {
         }
         table_rows.push(_.omit(item, ignoreColumns))
     });
+    debugger
     return {columns: table_column, data: table_rows}
 }
 

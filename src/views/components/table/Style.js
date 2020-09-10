@@ -15,7 +15,7 @@ export const useRowStyles = makeStyles({
         backgroundColor: '#EEE'
     },
     table: {
-        marginTop: 40
+        marginTop: 20
     },
     textField: {
         width: 115

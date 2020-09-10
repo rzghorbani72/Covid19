@@ -53,13 +53,14 @@ export function Row(props) {
                         <TableCell className={classes.rowCursor}>
                             <IconButton aria-label="expand row" size="small"
                                         onClick={() => fetchCountryChart(currentRow.CountryCode)}>
-                                {!_.isEmpty(open) && open.code === currentRow.CountryCode && open.status ?
-                                    <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
+                                {currentRow.open ?
+                                    <KeyboardArrowUpIcon style={{color: '#E91E63'}}/> :
+                                    <KeyboardArrowDownIcon style={{color: '#E91E63'}}/>}
                             </IconButton>
                         </TableCell>}
-                    {_.keys(currentRow).map(key => {
-                        if (!_.includes(['CountryCode','open'],key)) {
-                            return (<TableCell align="center"
+                    {_.keys(currentRow).map((key, index) => {
+                        if (!_.includes(['CountryCode', 'open'], key)) {
+                            return (<TableCell key={index} align="center"
                                                style={{
                                                    color: ui.getTextColor(key),
                                                    fontWeight: props.type === 'glob' ? 'bolder' : 'normal',

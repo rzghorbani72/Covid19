@@ -5,17 +5,21 @@ export const useStyles = makeStyles({
         width: '100%',
         height: 100,
         color:'#FFF',
-        backgroundColor: '#689F38',
+        backgroundColor: '#1B5E20',
         display:'flex',
         alignItems:'center',
         justifyContent:'center',
         flexDirection:'column',
-        borderTop:'2px solid #FFC107'
+        // borderTop:'2px solid #FFC107'
     },
     name:{
-        color:'#FFEA00',
         fontSize:17,
-        margin:'0px 3px'
+        margin:'0px 3px',
+        '& a':{
+            cursor:'pointer',
+            color:'#FFEA00',
+            textDecoration:'none !important'
+        }
     },
     email:{
         color:'#FFF',

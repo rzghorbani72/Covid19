@@ -27,10 +27,16 @@ function GlobeStats(props) {
 
     return (
         <div className={classes.root}>
-            <h2 className={classes.h2}>Global Stats</h2>
-            {loading ? <CircularProgress/> : !_.isEmpty(globeCountriesStats) && <Table data={[globeCountriesStats.Global]}/>}
-            <h2 className={classes.h2}>Countries Stats</h2>
-            {loading ? <CircularProgress/> : !_.isEmpty(globeCountriesStats) && <Table data={globeCountriesStats.Countries}/>}
+            {loading ?
+                <CircularProgress className={classes.loading}/>
+                :
+                <>
+                    <h2 className={classes.h2}>Coronavirus Global Statistics</h2>
+                    {!_.isEmpty(globeCountriesStats) && <Table data={[globeCountriesStats.Global]}/>}
+                    <h2 className={classes.h2}>Coronavirus Countries Statistics</h2>
+                    {!_.isEmpty(globeCountriesStats) && <Table data={globeCountriesStats.Countries}/>}
+                </>
+            }
         </div>
     )
 }

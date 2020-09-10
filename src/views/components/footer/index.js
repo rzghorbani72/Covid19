@@ -6,10 +6,11 @@ export default function Footer() {
     return (
         <div className={classes.root}>
             <div className={classes.wrapFooterText}><span>developed by </span>
-                <h2 className={classes.name}> Reza Ghorbani</h2></div>
-            <div className={classes.wrapFooterText}><span>LinkedIn : </span><a
-                href="https://www.linkedin.com/in/reza-ghorbani-a59196116/"
-                className={classes.name}>reza-ghorbani-a59196116</a></div>
+                <h2 className={classes.name}>
+                    <a href="https://www.linkedin.com/in/reza-ghorbani-a59196116/"> Reza
+                        Ghorbani</a>
+                </h2>
+            </div>
         </div>
     )
 }

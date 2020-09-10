@@ -6,10 +6,14 @@ export const useStyles = makeStyles({
         flexDirection: 'column',
     },
     h2: {
-        fontSize: 30,
-        color: 'white',
+        fontSize: 20,
+        fontWeight:'Bold',
+        color: '#455A64',
         marginTop: 80,
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'left',
+    },
+    loading :{
+        marginTop:100
     }
 });

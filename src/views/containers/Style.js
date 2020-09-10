@@ -1,9 +1,9 @@
 import {makeStyles} from "@material-ui/core/styles";
-
-
+import virus from '../assets/images/coronavirus512.png'
 export const useStyles = makeStyles((theme) => ({
     root: {
-        backgroundColor:'#42a5f5'
+        backgroundImage: `url(${virus})`,
+        backgroundRepeat: 'repeat'
     },
     paper: {
         padding: theme.spacing(2),
