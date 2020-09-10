@@ -42,34 +42,36 @@ const MapChart = (props) => {
                 {/*<ZoomableGroup>*/}
                 <Geographies geography={geoUrl}>
                     {({geographies}) =>
-                        geographies.map(geo => (
-                            <Geography
-                                key={geo.rsmKey}
-                                geography={geo}
-                                onMouseEnter={() => {
-                                    const {NAME, ISO_A2} = geo.properties;
-                                    // setTooltipContent(`${NAME} — ${rounded(POP_EST)}`);
-                                    setTooltipContent(`${NAME} — ${getCountryDetails(ISO_A2)}`);
-                                }}
-                                onMouseLeave={() => {
-                                    setTooltipContent("");
-                                }}
-                                style={{
-                                    default: {
-                                        fill: "#fff3e0",
-                                        outline: "none"
-                                    },
-                                    hover: {
-                                        fill: "#F53",
-                                        outline: "none"
-                                    },
-                                    pressed: {
-                                        fill: "#E42",
-                                        outline: "none"
-                                    }
-                                }}
-                            />
-                        ))
+                        geographies.map(geo => {
+                                const {NAME, ISO_A2} = geo.properties;
+
+                                return (<Geography
+                                    key={geo.rsmKey}
+                                    geography={geo}
+                                    onMouseEnter={() => {
+                                        // setTooltipContent(`${NAME} — ${rounded(POP_EST)}`);
+                                        setTooltipContent(`${NAME} — ${getCountryDetails(ISO_A2)}`);
+                                    }}
+                                    onMouseLeave={() => {
+                                        setTooltipContent("");
+                                    }}
+                                    style={{
+                                        default: {
+                                            fill: "#fff3e0",
+                                            outline: "none"
+                                        },
+                                        hover: {
+                                            fill: "#F53",
+                                            outline: "none"
+                                        },
+                                        pressed: {
+                                            fill: "#E42",
+                                            outline: "none"
+                                        }
+                                    }}
+                                />)
+                            }
+                        )
                     }
                 </Geographies>
                 {/*</ZoomableGroup>*/}
