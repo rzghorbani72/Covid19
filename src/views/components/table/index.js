@@ -56,7 +56,7 @@ function CollapsibleTable(props) {
     const openRowCollapse = code => {
         const rowIndex = _.findIndex(tableData.data, {CountryCode: code});
         const newRows = [...tableData.data];
-        newRows.map((item, key) => item.open = key === rowIndex)
+        newRows.map((item, key) => key === rowIndex && _.has(item,'open') ? item.open = !item.open : item.open = key === rowIndex)
         setTableData(createTableDataStructure(newRows));
     }
     useEffect(() => {
@@ -77,7 +77,7 @@ function CollapsibleTable(props) {
                             <TableRow>
                                 <TableCell/>
                                 {tableData.columns.map(item => {
-                                    if (item.title !== 'CountryCode') {
+                                    if (!_.includes(['CountryCode','open'],item.title)) {
                                         if (props.data.length === 1) {
                                             return <TableCell align="center"
                                                               style={{

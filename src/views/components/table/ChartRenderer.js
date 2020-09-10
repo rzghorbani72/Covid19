@@ -6,7 +6,7 @@ am4core.useTheme(am4themes_myTheme);
 function am4themes_myTheme(target) {
     if (target instanceof am4core.ColorSet) {
         target.list = [
-            am4core.color("#F06292")
+            am4core.color("#a30000")
         ];
     }
 }
@@ -15,7 +15,7 @@ export function renderChart(values, code) {
     let chart = am4core.create(`Report_Chart_${code}`, am4charts.XYChart);
     chart.data = values;
     chart.logo.height = -15000
-    chart.svgContainer.htmlElement.style.height = '300px'
+    chart.svgContainer.htmlElement.style.height = '330px'
 
     let dateAxis = chart.xAxes.push(new am4charts.DateAxis());
     dateAxis.renderer.grid.template.location = 0.5;

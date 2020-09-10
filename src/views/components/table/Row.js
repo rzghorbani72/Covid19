@@ -58,7 +58,7 @@ export function Row(props) {
                             </IconButton>
                         </TableCell>}
                     {_.keys(currentRow).map(key => {
-                        if (key !== 'CountryCode') {
+                        if (!_.includes(['CountryCode','open'],key)) {
                             return (<TableCell align="center"
                                                style={{
                                                    color: ui.getTextColor(key),
