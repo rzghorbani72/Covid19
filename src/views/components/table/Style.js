@@ -11,7 +11,7 @@ export const useRowStyles = makeStyles({
         maxHeight: 690,
         overflowY: 'scroll !important'
     },
-    tableHead: {
+    rowCursor: {
         backgroundColor: '#EEE'
     },
     table: {

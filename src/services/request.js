@@ -1,11 +1,16 @@
 import axios from 'axios';
 
-export function request(method = 'get', url) {
+export const request = async (method = 'get', url) => {
+    const headers = {
+        'Accept': '*/*',
+        'Connection': 'keep-alive'
+    }
     if (method === 'get') {
-        return fetch(url)
-            .then(res => res.json())
-            .then(result => {
-                return result
-            })
+        try {
+            const response = await axios.get(url, {headers});
+            return response.data
+        }catch (e) {
+            return e;
+        }
     }
 }

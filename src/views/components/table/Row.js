@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useMemo} from "react";
 import {useRowStyles} from "./Style";
 import {fetchEachCountryTimeLineData} from "../../../stores/eachCountryTimeLine/actions";
 import _ from "lodash";
@@ -9,59 +9,76 @@ import IconButton from "@material-ui/core/IconButton";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import {ui} from "../../../constants/config";
-import LoadingImage from '../../assets/image/loader.gif'
 import Collapse from "@material-ui/core/Collapse";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export function Row(props) {
-    const {row} = props;
-    const [open, setOpen] = useState(false);
+    const {row, openRowCollapse} = props;
+    const [currentRow, setCurrentRow] = useState()
+    const [open, setOpen] = useState({});
     const [loading, setLoading] = useState(false);
     const [selectedCountryCode, setSelectedCountryCode] = useState(null)
     const classes = useRowStyles();
     const fetchCountryChart = (code) => {
-        const {dispatch} = props
-        setOpen(!open)
-        if (!open) {
-            setSelectedCountryCode(code)
-            dispatch(fetchEachCountryTimeLineData(code));
-        }
+        openRowCollapse(code);
     }
+    useMemo(() => {
+        const {dispatch} = props
+        setCurrentRow(row)
+        if (row.open) {
+            setSelectedCountryCode(row.CountryCode)
+            dispatch(fetchEachCountryTimeLineData(row.CountryCode));
+        }
+    }, [row]);
     useEffect(() => {
         const {eachCountryTimeLine} = props;
         setLoading(eachCountryTimeLine.loading);
         if (!eachCountryTimeLine.loading && !_.isEmpty(eachCountryTimeLine.data)) {
-            if (eachCountryTimeLine.data[0]['CountryCode'] === selectedCountryCode) renderChart(eachCountryTimeLine.data, selectedCountryCode)
+            if (_.isEmpty(eachCountryTimeLine.data)) {
+                setOpen(false)
+            } else {
+                if (eachCountryTimeLine.data[0]['CountryCode'] === selectedCountryCode) renderChart(eachCountryTimeLine.data, selectedCountryCode)
+            }
         }
     }, [props.eachCountryTimeLine]);
 
     return (
         <React.Fragment>
-            <TableRow className={classes.root}>
-                <TableCell>
-                    <IconButton aria-label="expand row" size="small" onClick={() => fetchCountryChart(row.CountryCode)}>
-                        {open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
-                    </IconButton>
-                </TableCell>
-                {_.keys(row).map(key => {
-                    if (key !== 'CountryCode') {
-                        return (<TableCell align="center"
-                                           style={{
-                                               color: ui.getTextColor(key),
-                                               fontWeight: props.type === 'glob' ? 'bolder' : 'normal',
-                                               fontSize: props.type === 'glob' ? 25 : 13
-                                           }}>{String(row[key].toLocaleString())}</TableCell>
-                        )
-                    }
-                })}
-            </TableRow>
-            <TableRow>
-                <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={_.keys(row).length + 1}>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
-                        <div className={classes.loading}> {loading && <img width={100} height={100} src={LoadingImage}/>}</div>
-                        <div id={`Report_Chart_${row.CountryCode}`}/>
-                    </Collapse>
-                </TableCell>
-            </TableRow>
+            {!_.isEmpty(currentRow) &&
+            <>
+                <TableRow className={classes.root}>
+                    {props.type === 'glob' ?
+                        <TableCell/>
+                        :
+                        <TableCell className={classes.rowCursor}>
+                            <IconButton aria-label="expand row" size="small"
+                                        onClick={() => fetchCountryChart(currentRow.CountryCode)}>
+                                {!_.isEmpty(open) && open.code === currentRow.CountryCode && open.status ?
+                                    <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
+                            </IconButton>
+                        </TableCell>}
+                    {_.keys(currentRow).map(key => {
+                        if (key !== 'CountryCode') {
+                            return (<TableCell align="center"
+                                               style={{
+                                                   color: ui.getTextColor(key),
+                                                   fontWeight: props.type === 'glob' ? 'bolder' : 'normal',
+                                                   fontSize: props.type === 'glob' ? 25 : 13
+                                               }}>{String(currentRow[key].toLocaleString())}</TableCell>
+                            )
+                        }
+                    })}
+                </TableRow>
+                <TableRow>
+                    <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={_.keys(currentRow).length + 1}>
+                        <Collapse in={currentRow.open} timeout="auto" unmountOnExit>
+                            <div className={classes.loading}> {loading && <CircularProgress/>}</div>
+                            <div id={`Report_Chart_${currentRow.CountryCode}`}/>
+                        </Collapse>
+                    </TableCell>
+                </TableRow>
+            </>
+            }
         </React.Fragment>
     );
 }

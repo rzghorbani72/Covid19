@@ -34,6 +34,7 @@ function CollapsibleTable(props) {
         const regex = new RegExp(`(${country}).*`, "gi");
         setTimeout(() => {
             const filtered = _.filter(props.data, obj => obj.Country.match(regex))
+            filtered.map(item => item.open = false)
             setTableData(createTableDataStructure(filtered));
         }, 500);
     }
@@ -48,13 +49,21 @@ function CollapsibleTable(props) {
             setAscending(obj);
             isAsc = true;
         }
-        const sorted = _.sortBy(tableData.data, [by]);
+        let sorted = _.sortBy(tableData.data, [by]);
+        sorted.map(item => item.open = false)
         setTableData(createTableDataStructure(isAsc ? sorted : _.reverse(sorted)));
+    }
+    const openRowCollapse = code => {
+        const rowIndex = _.findIndex(tableData.data, {CountryCode: code});
+        const newRows = [...tableData.data];
+        newRows.map((item, key) => item.open = key === rowIndex)
+        setTableData(createTableDataStructure(newRows));
     }
     useEffect(() => {
         const {data} = props;
         if (!_.isEmpty(data) && _.isArray(data)) {
-            const sorted = _.reverse(_.sortBy(data, "NewDeaths"));
+            let sorted = _.reverse(_.sortBy(data, "NewDeaths"));
+            sorted.map(item => item.open = false)
             setTableData(createTableDataStructure(sorted));
         }
     }, [props.data]);
@@ -64,7 +73,7 @@ function CollapsibleTable(props) {
             <Table aria-label="collapsible table">
                 <TableContainer className={classes.container}>
                     <Table stickyHeader aria-label="sticky table">
-                        <TableHead className={classes.tableHead}>
+                        <TableHead>
                             <TableRow>
                                 <TableCell/>
                                 {tableData.columns.map(item => {
@@ -115,6 +124,7 @@ function CollapsibleTable(props) {
                         <TableBody>
                             {tableData.data.map((row, index) => (
                                 <Row
+                                    openRowCollapse={openRowCollapse}
                                     key={index} {...props} row={row}
                                     type={props.data.length === 1 ? 'glob' : 'countries'}/>
                             ))}
