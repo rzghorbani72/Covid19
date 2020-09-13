@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import _ from 'lodash';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import {fetchSummaryData} from '../../../stores/summary/actions';
+import {fetchSummaryData} from '../../../../stores/summary/actions';
 import Table from '../table'
 import {useStyles} from './Style'
 

@@ -16,7 +16,7 @@ import moment from "moment";
 import {connect} from 'react-redux'
 
 import {useRowStyles} from './Style'
-import {ui} from '../../../constants/config';
+import {ui} from '../../../../constants/config';
 import {Row} from './Row'
 
 const mapStateToProps = state => ({

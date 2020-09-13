@@ -6,9 +6,9 @@ import {
     Geography
 } from "react-simple-maps";
 import {connect} from 'react-redux';
-import geoUrl from '../../../constants/map.json'
+import geoUrl from '../../../../constants/map.json'
 import _ from "lodash";
-import {fetchSummaryData} from "../../../stores/summary/actions";
+import {fetchSummaryData} from "../../../../stores/summary/actions";
 // const geoUrl =
 //     "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
 

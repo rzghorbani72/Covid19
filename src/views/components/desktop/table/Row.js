@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useMemo} from "react";
 import {useRowStyles} from "./Style";
-import {fetchEachCountryTimeLineData} from "../../../stores/eachCountryTimeLine/actions";
+import {fetchEachCountryTimeLineData} from "../../../../stores/eachCountryTimeLine/actions";
 import _ from "lodash";
 import {renderChart} from "./ChartRenderer";
 import TableRow from "@material-ui/core/TableRow";
@@ -8,7 +8,7 @@ import TableCell from "@material-ui/core/TableCell";
 import IconButton from "@material-ui/core/IconButton";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
-import {ui} from "../../../constants/config";
+import {ui} from "../../../../constants/config";
 import Collapse from "@material-ui/core/Collapse";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
