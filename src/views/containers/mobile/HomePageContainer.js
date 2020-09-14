@@ -1,20 +1,26 @@
 import React from "react";
-import GlobeStats from "../../components/desktop/globeSummaryStatsTable";
 import {useStyles} from './Style';
 import Grid from '@material-ui/core/Grid';
-import GlobeMap from "../../components/desktop/globeMap";
+import {connect} from 'react-redux'
+import GlobeStats from '../../components/mobile/glob'
+import CountriesStats from '../../components/mobile/countries'
 
-export default function HomePageContainer() {
+function HomePageContainer(props) {
     const classes = useStyles();
     return (
         <>
             <div className={classes.root}>
-                mobileView
-                {/*<Grid item xs={12} className={classes.tableWrapper}>*/}
-                {/*    <GlobeStats/>*/}
-                {/*</Grid>*/}
-                {/*<GlobeMap/>*/}
+                <Grid item xs={12} className={classes.tableWrapper}>
+                    <GlobeStats {...props}/>
+                </Grid>
+                <Grid item xs={12} className={classes.tableWrapper}>
+                    <CountriesStats {...props}/>
+                </Grid>
             </div>
         </>
     )
 }
+const mapStateToProps = state => ({
+    summary: state.summary
+})
+export default connect(mapStateToProps)(HomePageContainer)
