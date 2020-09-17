@@ -10,9 +10,12 @@ export default function HomePageContainer() {
         <>
             <div className={classes.root}>
                 <Grid item xs={12} className={classes.tableWrapper}>
-                    <GlobeStats/>
+                    <Grid item xs={12} sm={10} md={10} lg={9} xl={8}>
+                        <GlobeStats/>
+                    </Grid>
                 </Grid>
                 <GlobeMap/>
+
             </div>
         </>
     )

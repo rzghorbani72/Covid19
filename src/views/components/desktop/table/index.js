@@ -9,6 +9,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import ReactCountryFlag from "react-country-flag"
+
 import ImportExportIcon from '@material-ui/icons/ImportExport';
 import TextField from '@material-ui/core/TextField';
 
@@ -22,18 +24,38 @@ import {Row} from './Row'
 const mapStateToProps = state => ({
     eachCountryTimeLine: state.eachCountryTimeLine
 });
+let table_column = [
+    {
+        id: 'location',
+        label: 'Location',
+        minWidth: 100,
+        align: 'left',
+        // format: (value) => value.toLocaleString('en-US')
+    },
+    {
+        id: 'cases',
+        label: 'Cases',
+        minWidth: 50,
+        align: 'center'
+    },
+    {
+        id: 'recovered',
+        label: 'Recovered',
+        minWidth: 50,
+        align: 'center'
+    },
+    {
+        id: 'death',
+        label: 'Death',
+        minWidth: 50,
+        align: 'center'
+    }]
 
-function CollapsibleTable(props) {
+function ReportTable(props) {
     const classes = useRowStyles();
     const [ascending, setAscending] = useState({TotalDeaths: true})
     const [tableData, setTableData] = useState({
-        columns: [
-            {title: "NewConfirmed", field: "NewConfirmed"}
-            , {title: "TotalConfirmed", field: "TotalConfirmed"}
-            , {title: "NewDeaths", field: "NewDeaths"}
-            , {title: "TotalDeaths", field: "TotalDeaths"}
-            , {title: "NewRecovered", field: "NewRecovered"}
-            , {title: "TotalRecovered", field: "TotalRecovered"}],
+        columns: table_column,
         data: [],
     });
     const filterTableRows = (country) => {
@@ -42,7 +64,7 @@ function CollapsibleTable(props) {
             const filtered = _.filter(props.data, obj => obj.Country.match(regex))
             filtered.map(item => item.open = false)
             let sorted = _.sortBy(filtered, "NewDeaths");
-            sorted.map(item => item.open = false)
+            sorted.map(item => item.open = false);
             setTableData(createTableDataStructure(filtered));
         }, 500);
     }
@@ -61,12 +83,12 @@ function CollapsibleTable(props) {
         sorted.map(item => item.open = false)
         setTableData(createTableDataStructure(isAsc ? sorted : _.reverse(sorted)));
     }
-    const openRowCollapse = code => {
-        const rowIndex = _.findIndex(tableData.data, {CountryCode: code});
-        const newRows = [...tableData.data];
-        newRows.map((item, key) => key === rowIndex && _.has(item, 'open') ? item.open = !item.open : item.open = key === rowIndex)
-        setTableData(createTableDataStructure(newRows));
-    }
+    // const openRowCollapse = code => {
+    //     const rowIndex = _.findIndex(tableData.data, {CountryCode: code});
+    //     const newRows = [...tableData.data];
+    //     newRows.map((item, key) => key === rowIndex && _.has(item, 'open') ? item.open = !item.open : item.open = key === rowIndex)
+    //     setTableData(createTableDataStructure(newRows));
+    // }
     useEffect(() => {
         const {data} = props;
         if (!_.isEmpty(data) && _.isArray(data)) {
@@ -77,93 +99,107 @@ function CollapsibleTable(props) {
     }, [props.data]);
 
     return (
-        <TableContainer component={Paper} className={classes.table}>
-            <Table aria-label="collapsible table">
-                <TableContainer className={classes.container}>
-                    <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell/>
-                                {tableData.columns.map((item, key) => {
-                                    if (!_.includes(['CountryCode', 'open'], item.title)) {
-                                        if (props.data.length === 1) {
-                                            return <TableCell key={key} align="center"
-                                                              style={{
-                                                                  color: ui.getTextColor(item.title),
-                                                                  fontWeight: 'bold',
-                                                                  fontSize: 16
-                                                              }}
-                                                              className={classes.TableHeadCell}>{item.title}</TableCell>
-                                        } else {
-                                            switch (item.title) {
-                                                case 'Country':
-                                                    return (<TableCell key={key} align="center">
-                                                        <TextField id="filled-search"
-                                                                   label="Search Country"
-                                                                   InputProps={{
-                                                                       style: {fontSize: 13, color: '#E91E63'}
-                                                                   }}
-                                                                   InputLabelProps={{
-                                                                       style: {fontSize: 13, color: '#E91E63'}
-                                                                   }}
-                                                                   className={classes.textField}
-                                                                   onChange={(e) => filterTableRows(e.target.value)}
-                                                                   type="search"
-                                                                   variant="filled"/>
-                                                    </TableCell>)
-                                                case 'Date' :
-                                                    return <TableCell key={key} align="center"
-                                                                      style={{color: ui.getTextColor(item.title)}}
-                                                                      className={classes.TableHeadCell}>LastUpdateDate</TableCell>
-                                                default :
-                                                    return <TableCell key={key} align="center"
-                                                                      className={classes.TableHeadCell}
-                                                                      style={{color: ui.getTextColor(item.title)}}
-                                                                      onClick={() => sortArray(item.title)}>
-                                                        <div className={classes.tableCell}><ImportExportIcon
-                                                            style={{color: '#b1b3b1'}}/>{item.title}
+        <Paper className={classes.root}>
+            <TableContainer className={classes.container}>
+                <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                        <TableRow>
+                            {tableData.columns.map((column, key) => {
+                                return (
+                                    <TableCell
+                                        key={column.id}
+                                        align={column.align}
+                                        style={{minWidth: column.minWidth}}
+                                    >
+                                        {column.label}
+                                    </TableCell>
+                                )
+                            })}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {tableData.data.map((row) => {
+                            return (
+                                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                    {tableData.columns.map((column) => {
+                                        switch (column.id) {
+                                            case 'location' :
+                                                return (
+                                                    <TableCell key={column.id}
+                                                               align={column.align}>
+                                                        <div>
+                                                            <ReactCountryFlag
+                                                                className="emojiFlag"
+                                                                countryCode={row.CountryCode}
+                                                                style={{
+                                                                    fontSize: '1.5em',
+                                                                    lineHeight: '1em',
+                                                                    marginRight: 5
+                                                                }}
+                                                                aria-label={row.Country}
+                                                            />
+                                                            {row.Country}
                                                         </div>
                                                     </TableCell>
-                                            }
+                                                );
+                                            case 'cases' :
+                                                return (
+                                                    <TableCell key={column.id} align={column.align}>
+                                                        <div
+                                                            className={classes.doublePrimary}>{row.TotalConfirmed.toLocaleString()}</div>
+                                                        <div>{row.NewConfirmed > 0 && '+'}{row.NewConfirmed.toLocaleString()}</div>
+                                                    </TableCell>
+                                                );
+                                            case 'recovered' :
+                                                return (
+                                                    <TableCell key={column.id} align={column.align}>
+                                                        <div
+                                                            className={classes.doublePrimary}>{row.TotalRecovered.toLocaleString()}</div>
+                                                        <div>{row.NewRecovered > 0 && '+'}{row.NewRecovered.toLocaleString()}</div>
+                                                    </TableCell>
+                                                );
+                                            case 'death' :
+                                                return (
+                                                    <TableCell key={column.id} align={column.align}>
+                                                        <div
+                                                            className={classes.doublePrimary}>{row.TotalDeaths.toLocaleString()}</div>
+                                                        <div>{row.NewDeaths > 0 && '+'}{row.NewDeaths.toLocaleString()}</div>
+                                                    </TableCell>
+                                                );
                                         }
-                                    }
-                                })}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {tableData.data.map((row, key) => (
-                                <Row
-                                    openRowCollapse={openRowCollapse}
-                                    key={key} {...props}
-                                    row={row}
-                                    type={props.data.length === 1 ? 'glob' : 'countries'}/>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Table>
-        </TableContainer>
+                                        // return (
+                                        //     <TableCell key={column.id} align={column.align}>
+                                        //         {column.format && typeof value === 'number' ? column.format(value) : value}
+                                        //     </TableCell>
+                                        // );
+                                    })}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Paper>
     );
 }
 
 function createTableDataStructure(data) {
-    let table_column = [], table_rows = [];
-    const ignoreColumns = ["Premium", "Slug"]
-    _.mapKeys(data[0], (value, key) => {
-        !_.includes(ignoreColumns, key) && table_column.push({title: key, field: key})
-    });
+    const table_rows = data;
+    // const ignoreColumns = ["Premium", "Slug", "Date"]
+    // _.mapKeys(data[0], (value, key) => {
+    //     !_.includes(ignoreColumns, key) && table_column.push({title: key, field: key})
+    // });
 
-    data.map(item => {
-        if (_.has(item, 'Date') && _.endsWith(item.Date, 'Z')) {
-            item.Date = moment
-                .utc(item.Date)
-                .startOf("seconds")
-                .fromNow()
-        }
-        table_rows.push(_.omit(item, ignoreColumns))
-    });
-    debugger
+    // data.map(item => {
+    //     if (_.has(item, 'Date') && _.endsWith(item.Date, 'Z')) {
+    //         item.Date = moment
+    //             .utc(item.Date)
+    //             .startOf("seconds")
+    //             .fromNow()
+    //     }
+    //     table_rows.push(_.omit(item, ignoreColumns))
+    // });
     return {columns: table_column, data: table_rows}
 }
 
-export default connect(mapStateToProps)(CollapsibleTable)
+export default connect(mapStateToProps)(ReportTable)

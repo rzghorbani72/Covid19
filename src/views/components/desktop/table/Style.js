@@ -7,6 +7,15 @@ export const useRowStyles = makeStyles({
             borderBottom: 'unset',
         },
     },
+    doubleColumns:{
+        display:'flex',
+        flexDirection:'column'
+    },
+    doublePrimary:{
+        fontWeight:'bold'
+    },
+    doubleSecondary:{
+    },
     container: {
         maxHeight: 690,
         overflowY: 'scroll !important'

@@ -31,9 +31,9 @@ function GlobeStats(props) {
                 <CircularProgress className={classes.loading}/>
                 :
                 <>
-                    <h2 className={classes.h2}>Coronavirus Global Statistics</h2>
-                    {!_.isEmpty(globeCountriesStats) && <Table data={[globeCountriesStats.Global]}/>}
-                    <h2 className={classes.h2}>Coronavirus Countries Statistics</h2>
+                    {/*<h2 className={classes.h2}>Coronavirus Global Statistics</h2>*/}
+                    {/*{!_.isEmpty(globeCountriesStats) && <Table data={[globeCountriesStats.Global]}/>}*/}
+                    {/*<h2 className={classes.h2}>Coronavirus Countries Statistics</h2>*/}
                     {!_.isEmpty(globeCountriesStats) && <Table data={globeCountriesStats.Countries}/>}
                 </>
             }
