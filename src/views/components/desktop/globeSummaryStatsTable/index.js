@@ -34,7 +34,7 @@ function GlobeStats(props) {
                     {/*<h2 className={classes.h2}>Coronavirus Global Statistics</h2>*/}
                     {/*{!_.isEmpty(globeCountriesStats) && <Table data={[globeCountriesStats.Global]}/>}*/}
                     {/*<h2 className={classes.h2}>Coronavirus Countries Statistics</h2>*/}
-                    {!_.isEmpty(globeCountriesStats) && <Table data={globeCountriesStats.Countries}/>}
+                    {!_.isEmpty(globeCountriesStats) && <Table data={globeCountriesStats}/>}
                 </>
             }
         </div>

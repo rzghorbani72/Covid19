@@ -5,12 +5,11 @@ export const useStyles = makeStyles({
         width: '100%',
         height: 100,
         color:'#FFF',
-        backgroundColor: '#1B5E20',
+        background: 'linear-gradient(to right, #EC6EAD, #3494E6)',
         display:'flex',
         alignItems:'center',
         justifyContent:'center',
         flexDirection:'column',
-        // borderTop:'2px solid #FFC107'
     },
     name:{
         fontSize:17,

@@ -58,6 +58,10 @@ function ReportTable(props) {
         columns: table_column,
         data: [],
     });
+    const [tableGlobalData, setTableGlobalData] = useState({
+        columns: table_column,
+        data: [],
+    });
     const filterTableRows = (country) => {
         const regex = new RegExp(`(${country}).*`, "gi");
         setTimeout(() => {
@@ -83,16 +87,11 @@ function ReportTable(props) {
         sorted.map(item => item.open = false)
         setTableData(createTableDataStructure(isAsc ? sorted : _.reverse(sorted)));
     }
-    // const openRowCollapse = code => {
-    //     const rowIndex = _.findIndex(tableData.data, {CountryCode: code});
-    //     const newRows = [...tableData.data];
-    //     newRows.map((item, key) => key === rowIndex && _.has(item, 'open') ? item.open = !item.open : item.open = key === rowIndex)
-    //     setTableData(createTableDataStructure(newRows));
-    // }
+
     useEffect(() => {
-        const {data} = props;
-        if (!_.isEmpty(data) && _.isArray(data)) {
-            let sorted = _.reverse(_.sortBy(data, "NewDeaths"));
+        const {data:{Global,Countries}} = props;
+        if (!_.isEmpty(Countries) && _.isArray(Countries)) {
+            let sorted = _.reverse(_.sortBy(Countries, "NewDeaths"));
             sorted.map(item => item.open = false)
             setTableData(createTableDataStructure(sorted));
         }
@@ -103,6 +102,12 @@ function ReportTable(props) {
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
+                        <Table stickyHeader aria-label="sticky table">
+                            <TableHead>
+                            </TableHead>
+                            <TableBody>
+                            </TableBody>
+                        </Table>
                         <TableRow>
                             {tableData.columns.map((column, key) => {
                                 return (

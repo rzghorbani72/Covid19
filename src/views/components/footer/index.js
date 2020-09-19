@@ -7,7 +7,7 @@ export default function Footer() {
         <div className={classes.root}>
             <div className={classes.wrapFooterText}><span>developed by </span>
                 <h2 className={classes.name}>
-                    <a href="https://www.linkedin.com/in/reza-ghorbani-a59196116/"> Reza
+                    <a href="https://gitconnected.com/rzghorbani72/resume"> Reza
                         Ghorbani</a>
                 </h2>
             </div>
