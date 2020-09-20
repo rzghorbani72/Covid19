@@ -16,7 +16,7 @@ export const useStyles = makeStyles({
         margin:'0px 3px',
         '& a':{
             cursor:'pointer',
-            color:'#FFEA00',
+            color:'#FFF',
             textDecoration:'none !important'
         }
     },

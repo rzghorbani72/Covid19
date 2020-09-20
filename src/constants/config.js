@@ -1,4 +1,6 @@
 export const base_url_covid19api = `https://api.covid19api.com`
+export const base_url_thevirustracker = `https://thevirustracker.com`
+export const base_url_local = `http://127.0.0.1:9000`
 export const ui = {
     getTextColor: (title) => {
         switch (title) {

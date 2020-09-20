@@ -8,6 +8,7 @@ import {fetchEachCountryTimeLineDataSuccess, fetchEachCountryTimeLineDataFail} f
 function* fetchData({payload: {code}}) {
     try {
         let time_line_data = yield call(request, 'get', api.getTimeLine(code));
+
         if (!isEmpty(time_line_data) && isObject(time_line_data)) {
             yield put(fetchEachCountryTimeLineDataSuccess(time_line_data))
         } else {

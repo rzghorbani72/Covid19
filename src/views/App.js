@@ -3,8 +3,8 @@ import React from 'react';
 import {Provider} from "react-redux";
 import './App.css';
 import HomePage from "./pages/HomePage";
-import Header from "./components/header";
-import Footer from "./components/footer";
+import Header from "./components/desktop/header";
+import Footer from "./components/desktop/footer";
 import {store, persistor} from "../stores/store";
 
 function App() {

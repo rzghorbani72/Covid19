@@ -7,7 +7,7 @@ export default function GlobeMap() {
     const [content, setContent] = useState("");
     return (
         <>
-            <MapChart setTooltipContent={setContent} />
+            <MapChart setTooltipContent={setContent}/>
             <ReactTooltip>{content}</ReactTooltip>
         </>
     )

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import _ from 'lodash';
 
 //material-ui components
@@ -9,20 +9,18 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import ReactCountryFlag from "react-country-flag"
-import PublicSharpIcon from '@material-ui/icons/PublicSharp';
-import ImportExportIcon from '@material-ui/icons/ImportExport';
+import {tableRowsGenerator, tableColumnsGenerator} from './widgets'
+import {renderChart} from './ChartRenderer'
 import TextField from '@material-ui/core/TextField';
 
 import moment from "moment";
 import {connect} from 'react-redux'
 
 import {useRowStyles} from './Style'
-import {ui} from '../../../../constants/config';
-import {Row} from './Row'
+import timeLine from "../../../../stores/timeLine/reducer";
 
 const mapStateToProps = state => ({
-    eachCountryTimeLine: state.eachCountryTimeLine
+    timeLine: state.timeLine
 });
 let table_column = [
     {
@@ -89,7 +87,7 @@ function ReportTable(props) {
         setTableData(createTableDataStructure(isAsc ? sorted : _.reverse(sorted)));
     }
 
-    useEffect(() => {
+    useMemo(() => {
         const {data: {Global, Countries}} = props;
         if (!_.isEmpty(Countries) && _.isArray(Countries)) {
             Global.Country = 'world wide';
@@ -106,110 +104,75 @@ function ReportTable(props) {
         }
     }, [props.data]);
 
-    return (
-        <Paper className={classes.root}>
-            <TableContainer className={classes.container}>
-                <Table stickyHeader aria-label="sticky table" className={classes.globe}>
-                    <TableHead>
-                        <TableRow>
-                            {tableColumnsGenerator(tableGlobalData, classes)}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {tableRowsGenerator(tableGlobalData, classes,true)}
-                    </TableBody>
-                </Table>
-                <div className={classes.date}><span>updated {updateDate.ago} at {updateDate.date}</span></div>
-                <Table stickyHeader aria-label="sticky table">
-                    <TableHead>
-                        <TableRow>
-                            {tableColumnsGenerator(tableData, classes)}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {tableRowsGenerator(tableData, classes)}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Paper>
-    );
-}
-
-function tableColumnsGenerator(tableData) {
-    return tableData.columns.map((column, key) => {
-        return (
-            <TableCell
-                key={column.id}
-                align={column.align}
-                style={{minWidth: column.minWidth}}
-            >
-                {column.label}
-            </TableCell>
-        )
-    })
-}
-
-function tableRowsGenerator(tableData, classes,glob=false) {
-    return tableData.data.map((row) => {
-        return (
-            <TableRow hover tabIndex={-1} >
-                {tableData.columns.map((column) => {
-                    switch (column.id) {
-                        case 'location' :
-                            return (
-                                <TableCell key={column.id}
-                                           className={glob ? classes.globeRow : {}}
-                                           align={column.align} >
-                                    <div>
-                                        {row.Country === 'world wide' ?
-                                            <PublicSharpIcon fontSize='small' style={{margin:5}}/>
-                                            :
-                                        <ReactCountryFlag
-                                            className="emojiFlag"
-                                            countryCode={row.CountryCode}
-                                            style={{
-                                                fontSize: '1.5em',
-                                                lineHeight: '1em',
-                                                marginRight: 5
-                                            }}
-                                            aria-label={row.Country}
-                                        />}
-                                        {row.Country === 'world wide' ?
-                                            <span style={{fontWeight: 'bolder'}}>world wide</span> : row.Country}
-                                    </div>
-                                </TableCell>
-                            );
-                        case 'cases' :
-                            return (
-                                <TableCell key={column.id} align={column.align} className={glob ? classes.globeRow : {}}>
-                                    <div
-                                        className={classes.doublePrimary}>{row.TotalConfirmed.toLocaleString()}</div>
-                                    <div>{row.NewConfirmed > 0 && '+'}{row.NewConfirmed.toLocaleString()}</div>
-                                </TableCell>
-                            );
-                        case 'recovered' :
-                            return (
-                                <TableCell key={column.id} align={column.align}>
-                                    <div style={{color: glob ? "white" : "#558B2F"}}
-                                         className={classes.doublePrimary}>{row.TotalRecovered.toLocaleString()}</div>
-                                    <div
-                                        style={{color: glob ? "white" : "#558B2F"}}>{row.NewRecovered > 0 && '+'}{row.NewRecovered.toLocaleString()}</div>
-                                </TableCell>
-                            );
-                        case 'death' :
-                            return (
-                                <TableCell key={column.id} align={column.align}>
-                                    <div style={{color: glob ? "white" : "#FF5722"}}
-                                         className={classes.doublePrimary}>{row.TotalDeaths.toLocaleString()}</div>
-                                    <div
-                                        style={{color: glob ? "white" : "#FF5722"}}>{row.NewDeaths > 0 && '+'}{row.NewDeaths.toLocaleString()}</div>
-                                </TableCell>
-                            );
+    useMemo(() => {
+        const {timeLine} = props
+        if (!_.isEmpty(timeLine.data) && !timeLine.loading) {
+            let array = [];
+            timeLine.data.timelineitems.map(item=>{
+                _.mapKeys(item, (value, key) => {
+                    if(_.isObject(value)){
+                        value.date = key
+                        array.push(value);
                     }
-                })}
-            </TableRow>
-        );
-    })
+                });
+            });
+            renderChart(array);
+        }
+    }, [props.timeLine]);
+
+    return (
+        <>
+            <Paper className={classes.root}>
+                <TableContainer className={classes.container}>
+                    <Table>
+                        <TableHead>
+                            <TableCell
+                                align='left'
+                            >
+                                chart
+                            </TableCell>
+                        </TableHead>
+                        <TableBody>
+                            <div id='Report_Chart'/>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+            <Paper className={classes.root}>
+                <TableContainer className={classes.container}>
+                    <Table stickyHeader aria-label="sticky table" className={classes.globe}>
+                        <TableHead>
+                            <TableRow>
+                                {tableColumnsGenerator(tableGlobalData, classes)}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {!_.isEmpty(tableGlobalData.data) && tableRowsGenerator({
+                                tableData: tableGlobalData,
+                                classes,
+                                glob: true, ...props
+                            })}
+                        </TableBody>
+                    </Table>
+                    <div className={classes.date}><span>updated {updateDate.ago} at {updateDate.date}</span></div>
+                    <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                            <TableRow>
+                                {tableColumnsGenerator(tableData, classes)}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {!_.isEmpty(tableData.data) && tableRowsGenerator({
+                                tableData,
+                                classes,
+                                glob: false, ...props
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+        </>
+    );
 }
 
 function createTableDataStructure(data) {

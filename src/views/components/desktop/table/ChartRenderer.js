@@ -6,13 +6,13 @@ am4core.useTheme(am4themes_myTheme);
 function am4themes_myTheme(target) {
     if (target instanceof am4core.ColorSet) {
         target.list = [
-            am4core.color("#a30000")
+            am4core.color("#D81B60")
         ];
     }
 }
 
-export function renderChart(values, code) {
-    let chart = am4core.create(`Report_Chart_${code}`, am4charts.XYChart);
+export function renderChart(values=[]) {
+    let chart = am4core.create(`Report_Chart`, am4charts.XYChart);
     chart.data = values;
     chart.logo.height = -15000
     chart.svgContainer.htmlElement.style.height = '330px'
@@ -47,16 +47,16 @@ export function renderChart(values, code) {
 
     let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
     valueAxis.min = 0;
-    valueAxis.max = _.maxBy(values, 'Deaths').Deaths;
+    valueAxis.max = _.maxBy(values, 'total_deaths').total_deaths;
     valueAxis.autoGridCount = true;
     valueAxis.gridCount = values.length;
     valueAxis.tooltip.disabled = true;
     valueAxis.gridCount = values.length;
 
     let series = chart.series.push(new am4charts.LineSeries());
-    series.dataFields.dateX = "Date";
-    series.name = "Deaths";
-    series.dataFields.valueY = "Deaths";
+    series.dataFields.dateX = "date";
+    series.name = "total_deaths";
+    series.dataFields.valueY = "total_deaths";
     series.tooltipText = "{date}\n[bold font-size: 14px]value: {valueY}[/]";
     series.tooltipHTML = "<span style='font-size:14px; color:#000000;'><b>{valueY.value}</b>";
     series.tooltipText = "[#000]{valueY.value}[/]";
