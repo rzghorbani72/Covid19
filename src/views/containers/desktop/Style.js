@@ -2,7 +2,7 @@ import {makeStyles} from "@material-ui/core/styles";
 //import virus from '../../assets/images/coronavirus512.png'
 export const useStyles = makeStyles((theme) => ({
     root: {
-        backgroundColor:'#cfd8dc'
+        backgroundColor:'#FAFAFA'
         // backgroundImage: `url(${virus})`,
         // backgroundRepeat: 'repeat'
     },

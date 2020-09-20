@@ -54,6 +54,7 @@ let table_column = [
 function ReportTable(props) {
     const classes = useRowStyles();
     const [ascending, setAscending] = useState({TotalDeaths: true})
+    const [updateDate, setUpdateDate] = useState('')
     const [tableData, setTableData] = useState({
         columns: table_column,
         data: [],
@@ -89,10 +90,18 @@ function ReportTable(props) {
     }
 
     useEffect(() => {
-        const {data:{Global,Countries}} = props;
+        const {data: {Global, Countries}} = props;
         if (!_.isEmpty(Countries) && _.isArray(Countries)) {
+            Global.Country = 'world wide';
+            Global.CountryCode = 'WORLD';
+            setTableGlobalData(createTableDataStructure([Global]))
             let sorted = _.reverse(_.sortBy(Countries, "NewDeaths"));
-            sorted.map(item => item.open = false)
+            let howLongAgo = moment
+                .utc(sorted[0].Date)
+                .startOf("seconds")
+                .fromNow();
+            let date = moment().utc(sorted[0].Date).format('MMMM Do YYYY, h:mm:ss a');
+            setUpdateDate({ago: howLongAgo, date})
             setTableData(createTableDataStructure(sorted));
         }
     }, [props.data]);
@@ -100,87 +109,25 @@ function ReportTable(props) {
     return (
         <Paper className={classes.root}>
             <TableContainer className={classes.container}>
-                <Table stickyHeader aria-label="sticky table">
+                <Table stickyHeader aria-label="sticky table" style={{backgroundColor: '#CDDC39'}}>
                     <TableHead>
-                        <Table stickyHeader aria-label="sticky table">
-                            <TableHead>
-                            </TableHead>
-                            <TableBody>
-                            </TableBody>
-                        </Table>
                         <TableRow>
-                            {tableData.columns.map((column, key) => {
-                                return (
-                                    <TableCell
-                                        key={column.id}
-                                        align={column.align}
-                                        style={{minWidth: column.minWidth}}
-                                    >
-                                        {column.label}
-                                    </TableCell>
-                                )
-                            })}
+                            {tableColumnsGenerator(tableGlobalData, classes)}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {tableData.data.map((row) => {
-                            return (
-                                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                    {tableData.columns.map((column) => {
-                                        switch (column.id) {
-                                            case 'location' :
-                                                return (
-                                                    <TableCell key={column.id}
-                                                               align={column.align}>
-                                                        <div>
-                                                            <ReactCountryFlag
-                                                                className="emojiFlag"
-                                                                countryCode={row.CountryCode}
-                                                                style={{
-                                                                    fontSize: '1.5em',
-                                                                    lineHeight: '1em',
-                                                                    marginRight: 5
-                                                                }}
-                                                                aria-label={row.Country}
-                                                            />
-                                                            {row.Country}
-                                                        </div>
-                                                    </TableCell>
-                                                );
-                                            case 'cases' :
-                                                return (
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        <div
-                                                            className={classes.doublePrimary}>{row.TotalConfirmed.toLocaleString()}</div>
-                                                        <div>{row.NewConfirmed > 0 && '+'}{row.NewConfirmed.toLocaleString()}</div>
-                                                    </TableCell>
-                                                );
-                                            case 'recovered' :
-                                                return (
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        <div
-                                                            className={classes.doublePrimary}>{row.TotalRecovered.toLocaleString()}</div>
-                                                        <div>{row.NewRecovered > 0 && '+'}{row.NewRecovered.toLocaleString()}</div>
-                                                    </TableCell>
-                                                );
-                                            case 'death' :
-                                                return (
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        <div
-                                                            className={classes.doublePrimary}>{row.TotalDeaths.toLocaleString()}</div>
-                                                        <div>{row.NewDeaths > 0 && '+'}{row.NewDeaths.toLocaleString()}</div>
-                                                    </TableCell>
-                                                );
-                                        }
-                                        // return (
-                                        //     <TableCell key={column.id} align={column.align}>
-                                        //         {column.format && typeof value === 'number' ? column.format(value) : value}
-                                        //     </TableCell>
-                                        // );
-                                    })}
-                                </TableRow>
-                            );
-                        })}
+                        {tableRowsGenerator(tableGlobalData, classes)}
+                    </TableBody>
+                </Table>
+                <div className={classes.date}><span>updated {updateDate.ago} at {updateDate.date}</span></div>
+                <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                        <TableRow>
+                            {tableColumnsGenerator(tableData, classes)}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {tableRowsGenerator(tableData, classes)}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -188,23 +135,81 @@ function ReportTable(props) {
     );
 }
 
-function createTableDataStructure(data) {
-    const table_rows = data;
-    // const ignoreColumns = ["Premium", "Slug", "Date"]
-    // _.mapKeys(data[0], (value, key) => {
-    //     !_.includes(ignoreColumns, key) && table_column.push({title: key, field: key})
-    // });
+function tableColumnsGenerator(tableData) {
+    return tableData.columns.map((column, key) => {
+        return (
+            <TableCell
+                key={column.id}
+                align={column.align}
+                style={{minWidth: column.minWidth}}
+            >
+                {column.label}
+            </TableCell>
+        )
+    })
+}
 
-    // data.map(item => {
-    //     if (_.has(item, 'Date') && _.endsWith(item.Date, 'Z')) {
-    //         item.Date = moment
-    //             .utc(item.Date)
-    //             .startOf("seconds")
-    //             .fromNow()
-    //     }
-    //     table_rows.push(_.omit(item, ignoreColumns))
-    // });
-    return {columns: table_column, data: table_rows}
+function tableRowsGenerator(tableData, classes) {
+    return tableData.data.map((row) => {
+        return (
+            <TableRow hover tabIndex={-1}>
+                {tableData.columns.map((column) => {
+                    switch (column.id) {
+                        case 'location' :
+                            return (
+                                <TableCell key={column.id}
+                                           align={column.align}>
+                                    <div>
+                                        <ReactCountryFlag
+                                            className="emojiFlag"
+                                            countryCode={row.CountryCode}
+                                            style={{
+                                                fontSize: '1.5em',
+                                                lineHeight: '1em',
+                                                marginRight: 5
+                                            }}
+                                            aria-label={row.Country}
+                                        />
+                                        {row.Country === 'world wide' ?
+                                            <span style={{fontWeight: 'bolder'}}>world wide</span> : row.Country}
+                                    </div>
+                                </TableCell>
+                            );
+                        case 'cases' :
+                            return (
+                                <TableCell key={column.id} align={column.align}>
+                                    <div
+                                        className={classes.doublePrimary}>{row.TotalConfirmed.toLocaleString()}</div>
+                                    <div>{row.NewConfirmed > 0 && '+'}{row.NewConfirmed.toLocaleString()}</div>
+                                </TableCell>
+                            );
+                        case 'recovered' :
+                            return (
+                                <TableCell key={column.id} align={column.align}>
+                                    <div style={{color: "#558B2F"}}
+                                         className={classes.doublePrimary}>{row.TotalRecovered.toLocaleString()}</div>
+                                    <div
+                                        style={{color: "#558B2F"}}>{row.NewRecovered > 0 && '+'}{row.NewRecovered.toLocaleString()}</div>
+                                </TableCell>
+                            );
+                        case 'death' :
+                            return (
+                                <TableCell key={column.id} align={column.align}>
+                                    <div style={{color: "#FF5722"}}
+                                         className={classes.doublePrimary}>{row.TotalDeaths.toLocaleString()}</div>
+                                    <div
+                                        style={{color: "#FF5722"}}>{row.NewDeaths > 0 && '+'}{row.NewDeaths.toLocaleString()}</div>
+                                </TableCell>
+                            );
+                    }
+                })}
+            </TableRow>
+        );
+    })
+}
+
+function createTableDataStructure(data) {
+    return {columns: table_column, data: data}
 }
 
 export default connect(mapStateToProps)(ReportTable)

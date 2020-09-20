@@ -6,16 +6,25 @@ export const useRowStyles = makeStyles({
         '& > *': {
             borderBottom: 'unset',
         },
+        marginTop:100
     },
-    doubleColumns:{
-        display:'flex',
-        flexDirection:'column'
+    date: {
+        display: 'flex',
+        padding: 5,
+        fontSize:'0.8rem',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor:'#B0BEC5',
+        color:'#263238'
     },
-    doublePrimary:{
-        fontWeight:'bold'
+    doubleColumns: {
+        display: 'flex',
+        flexDirection: 'column'
     },
-    doubleSecondary:{
+    doublePrimary: {
+        fontWeight: 'bold'
     },
+    doubleSecondary: {},
     container: {
         maxHeight: 690,
         overflowY: 'scroll !important'
