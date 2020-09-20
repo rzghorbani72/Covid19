@@ -8,6 +8,12 @@ export const useRowStyles = makeStyles({
         },
         marginTop:100
     },
+    globe:{
+        backgroundColor: '#1565C0',
+    },
+    globeRow:{
+        color:'white !important'
+    },
     date: {
         display: 'flex',
         padding: 5,

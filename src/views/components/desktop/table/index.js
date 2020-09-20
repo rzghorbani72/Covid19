@@ -10,7 +10,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import ReactCountryFlag from "react-country-flag"
-
+import PublicSharpIcon from '@material-ui/icons/PublicSharp';
 import ImportExportIcon from '@material-ui/icons/ImportExport';
 import TextField from '@material-ui/core/TextField';
 
@@ -109,14 +109,14 @@ function ReportTable(props) {
     return (
         <Paper className={classes.root}>
             <TableContainer className={classes.container}>
-                <Table stickyHeader aria-label="sticky table" style={{backgroundColor: '#CDDC39'}}>
+                <Table stickyHeader aria-label="sticky table" className={classes.globe}>
                     <TableHead>
                         <TableRow>
                             {tableColumnsGenerator(tableGlobalData, classes)}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {tableRowsGenerator(tableGlobalData, classes)}
+                        {tableRowsGenerator(tableGlobalData, classes,true)}
                     </TableBody>
                 </Table>
                 <div className={classes.date}><span>updated {updateDate.ago} at {updateDate.date}</span></div>
@@ -149,17 +149,21 @@ function tableColumnsGenerator(tableData) {
     })
 }
 
-function tableRowsGenerator(tableData, classes) {
+function tableRowsGenerator(tableData, classes,glob=false) {
     return tableData.data.map((row) => {
         return (
-            <TableRow hover tabIndex={-1}>
+            <TableRow hover tabIndex={-1} >
                 {tableData.columns.map((column) => {
                     switch (column.id) {
                         case 'location' :
                             return (
                                 <TableCell key={column.id}
-                                           align={column.align}>
+                                           className={glob ? classes.globeRow : {}}
+                                           align={column.align} >
                                     <div>
+                                        {row.Country === 'world wide' ?
+                                            <PublicSharpIcon fontSize='small' style={{margin:5}}/>
+                                            :
                                         <ReactCountryFlag
                                             className="emojiFlag"
                                             countryCode={row.CountryCode}
@@ -169,7 +173,7 @@ function tableRowsGenerator(tableData, classes) {
                                                 marginRight: 5
                                             }}
                                             aria-label={row.Country}
-                                        />
+                                        />}
                                         {row.Country === 'world wide' ?
                                             <span style={{fontWeight: 'bolder'}}>world wide</span> : row.Country}
                                     </div>
@@ -177,7 +181,7 @@ function tableRowsGenerator(tableData, classes) {
                             );
                         case 'cases' :
                             return (
-                                <TableCell key={column.id} align={column.align}>
+                                <TableCell key={column.id} align={column.align} className={glob ? classes.globeRow : {}}>
                                     <div
                                         className={classes.doublePrimary}>{row.TotalConfirmed.toLocaleString()}</div>
                                     <div>{row.NewConfirmed > 0 && '+'}{row.NewConfirmed.toLocaleString()}</div>
@@ -186,19 +190,19 @@ function tableRowsGenerator(tableData, classes) {
                         case 'recovered' :
                             return (
                                 <TableCell key={column.id} align={column.align}>
-                                    <div style={{color: "#558B2F"}}
+                                    <div style={{color: glob ? "white" : "#558B2F"}}
                                          className={classes.doublePrimary}>{row.TotalRecovered.toLocaleString()}</div>
                                     <div
-                                        style={{color: "#558B2F"}}>{row.NewRecovered > 0 && '+'}{row.NewRecovered.toLocaleString()}</div>
+                                        style={{color: glob ? "white" : "#558B2F"}}>{row.NewRecovered > 0 && '+'}{row.NewRecovered.toLocaleString()}</div>
                                 </TableCell>
                             );
                         case 'death' :
                             return (
                                 <TableCell key={column.id} align={column.align}>
-                                    <div style={{color: "#FF5722"}}
+                                    <div style={{color: glob ? "white" : "#FF5722"}}
                                          className={classes.doublePrimary}>{row.TotalDeaths.toLocaleString()}</div>
                                     <div
-                                        style={{color: "#FF5722"}}>{row.NewDeaths > 0 && '+'}{row.NewDeaths.toLocaleString()}</div>
+                                        style={{color: glob ? "white" : "#FF5722"}}>{row.NewDeaths > 0 && '+'}{row.NewDeaths.toLocaleString()}</div>
                                 </TableCell>
                             );
                     }

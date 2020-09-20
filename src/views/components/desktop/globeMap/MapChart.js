@@ -57,15 +57,15 @@ const MapChart = (props) => {
                                     }}
                                     style={{
                                         default: {
-                                            fill: "#fff3e0",
+                                            fill: "#607D8B",
                                             outline: "none"
                                         },
                                         hover: {
-                                            fill: "#F53",
+                                            fill: "#CDDC39",
                                             outline: "none"
                                         },
                                         pressed: {
-                                            fill: "#E42",
+                                            fill: "#8BC34A",
                                             outline: "none"
                                         }
                                     }}
