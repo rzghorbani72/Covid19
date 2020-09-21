@@ -4,6 +4,8 @@ import PublicSharpIcon from "@material-ui/icons/PublicSharp";
 import ReactCountryFlag from "react-country-flag";
 import {fetchEachCountryTimeLineData} from '../../../../stores/timeLine/country/actions';
 import React from "react";
+import Skeleton from "@material-ui/lab/Skeleton";
+import {fetchFullCountryTimeLineData} from "../../../../stores/timeLine/full/actions";
 
 export function tableColumnsGenerator(tableData) {
     return tableData.columns.map((column, key) => {
@@ -19,11 +21,36 @@ export function tableColumnsGenerator(tableData) {
     })
 }
 
+export function tableLoadingRowsGenerator() {
+    return Array.from(new Array(3)).map((row, key) => {
+        return (
+            <TableRow tabIndex={-1}>
+                <TableCell>
+                    <Skeleton animation="wave" height={100} width="100%"/>
+                </TableCell>
+                <TableCell>
+                    <Skeleton animation="wave" height={100} width="100%"/>
+                </TableCell>
+                <TableCell>
+                    <Skeleton animation="wave" height={100} width="100%"/>
+                </TableCell>
+                <TableCell>
+                    <Skeleton animation="wave" height={100} width="100%"/>
+                </TableCell>
+            </TableRow>
+        );
+    });
+}
+
 export function tableRowsGenerator(props) {
     const {tableData, classes, glob} = props
     const renderChartOfCountry = (code) => {
         const {dispatch} = props;
         dispatch(fetchEachCountryTimeLineData(code));
+    }
+    const getWorldTimeLine = () => {
+        const {dispatch} = props
+        dispatch(fetchFullCountryTimeLineData())
     }
     return tableData.data.map((row) => {
         return (
@@ -33,12 +60,12 @@ export function tableRowsGenerator(props) {
                         case 'location' :
                             return (
                                 <TableCell key={column.id}
-                                           onClick={() => renderChartOfCountry(row.CountryCode)}
                                            className={glob ? classes.globeRow : {}}
                                            align={column.align}>
                                     <div>
                                         {row.Country === 'world wide' ?
-                                            <PublicSharpIcon fontSize='small' style={{margin: 5}}/>
+                                            <PublicSharpIcon fontSize='small' style={{margin: 5}}
+                                                             onClick={getWorldTimeLine}/>
                                             :
                                             <ReactCountryFlag
                                                 className="emojiFlag"
@@ -51,7 +78,7 @@ export function tableRowsGenerator(props) {
                                                 aria-label={row.Country}
                                             />}
                                         {row.Country === 'world wide' ?
-                                            <span style={{fontWeight: 'bolder'}}>world wide</span> : row.Country}
+                                            <a onClick={getWorldTimeLine} class={classes.worldActive}>world wide</a> : <a onClick={() => renderChartOfCountry(row.CountryCode)} class={classes.active}>{row.Country}</a>}
                                     </div>
                                 </TableCell>
                             );

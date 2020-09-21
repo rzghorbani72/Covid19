@@ -9,8 +9,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Skeleton from "@material-ui/lab/Skeleton";
 
-import {tableRowsGenerator, tableColumnsGenerator} from './widgets'
+import {tableRowsGenerator, tableColumnsGenerator, tableLoadingRowsGenerator} from './widgets'
 import {renderChart} from './ChartRenderer'
 
 import moment from "moment";
@@ -50,8 +51,10 @@ let table_column = [
 
 function ReportTable(props) {
     const classes = useRowStyles();
+    const {tableLoading} = props;
     const [ascending, setAscending] = useState({TotalDeaths: true})
-    const [updateDate, setUpdateDate] = useState('')
+    const [updateDate, setUpdateDate] = useState('');
+    const [isLoading, setIsLoading] = useState(true)
     const [tableData, setTableData] = useState({
         columns: table_column,
         data: [],
@@ -105,8 +108,10 @@ function ReportTable(props) {
 
     useMemo(() => {
         const {timeLine} = props
-        if (!_.isEmpty(timeLine.data) && !timeLine.loading) {
+        setIsLoading(timeLine.loading);
+        if (!_.isEmpty(timeLine.data) && _.has(timeLine.data, 'timelineitems') && !timeLine.loading) {
             let array = [];
+            debugger
             timeLine.data.timelineitems.map(item => {
                 _.mapKeys(item, (value, key) => {
                     if (_.isObject(value)) {
@@ -121,6 +126,7 @@ function ReportTable(props) {
 
     useMemo(() => {
         const {fullTimeLine, dispatch} = props
+        setIsLoading(fullTimeLine.loading);
         if (!_.isEmpty(fullTimeLine.data) && !fullTimeLine.loading) {
             renderChart(fullTimeLine.data.data, 'deaths');
         }
@@ -141,6 +147,13 @@ function ReportTable(props) {
                             </TableCell>
                         </TableHead>
                         <TableBody>
+                            {isLoading &&
+                            <div className="row">
+                                <div className="col-xl-12 text-center">
+                                    <Skeleton animation="wave" height={300} width="100%"/>
+                                </div>
+                            </div>
+                            }
                             <div id='Report_Chart'/>
                         </TableBody>
                     </Table>
@@ -170,11 +183,13 @@ function ReportTable(props) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {!_.isEmpty(tableData.data) && tableRowsGenerator({
-                                tableData,
-                                classes,
-                                glob: false, ...props
-                            })}
+                            {tableLoading && _.isEmpty(tableData.data) ?
+                                tableLoadingRowsGenerator()
+                                : tableRowsGenerator({
+                                    tableData,
+                                    classes,
+                                    glob: false, ...props
+                                })}
                         </TableBody>
                     </Table>
                 </TableContainer>

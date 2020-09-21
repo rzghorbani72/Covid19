@@ -6,22 +6,36 @@ export const useRowStyles = makeStyles({
         '& > *': {
             borderBottom: 'unset',
         },
-        marginTop:30
+        marginTop: 30
     },
-    globe:{
+    active: {
+        cursor: 'pointer',
+        color: '#212121',
+        '&:hover':{
+            fontWeight: 'bold',
+            color: '#1565C0',
+        }
+    },
+    worldActive: {
+        cursor: 'pointer',
+        color: '#FFF',
+        fontSize: 17,
+        fontWeight: 'bolder'
+    },
+    globe: {
         backgroundColor: '#1565C0',
     },
-    globeRow:{
-        color:'white !important'
+    globeRow: {
+        color: 'white !important'
     },
     date: {
         display: 'flex',
         padding: 5,
-        fontSize:'0.8rem',
+        fontSize: '0.8rem',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor:'#B0BEC5',
-        color:'#263238'
+        backgroundColor: '#B0BEC5',
+        color: '#263238'
     },
     doubleColumns: {
         display: 'flex',

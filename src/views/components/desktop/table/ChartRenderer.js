@@ -47,7 +47,7 @@ export function renderChart(values=[],yAxisLabel) {
 
     let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
     valueAxis.min = 0;
-    valueAxis.max = _.maxBy(values, yAxisLabel).total_deaths;
+    valueAxis.max = _.maxBy(values, yAxisLabel)[yAxisLabel];
     valueAxis.autoGridCount = true;
     valueAxis.gridCount = values.length;
     valueAxis.tooltip.disabled = true;
