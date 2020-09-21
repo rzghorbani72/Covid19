@@ -18,6 +18,8 @@ import moment from "moment";
 import {connect} from 'react-redux'
 import {fetchFullCountryTimeLineData} from '../../../../stores/timeLine/full/actions';
 import {useRowStyles} from './Style';
+import {Search} from '../searchBox';
+import {Grid} from "@material-ui/core";
 
 const mapStateToProps = state => ({
     timeLine: state.timeLine,
@@ -143,7 +145,10 @@ function ReportTable(props) {
                             <TableCell
                                 align='left'
                             >
-                                chart
+                                <Grid container justify="left">
+                                    <Grid item xs={6} md={3} lg={2} xl={1}>chart</Grid>
+                                    <Grid item xs={6} md={3} lg={2} xl={1}><Search/></Grid>
+                                </Grid>
                             </TableCell>
                         </TableHead>
                         <TableBody>
