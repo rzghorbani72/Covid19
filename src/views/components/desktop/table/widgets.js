@@ -2,7 +2,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import PublicSharpIcon from "@material-ui/icons/PublicSharp";
 import ReactCountryFlag from "react-country-flag";
-import {fetchEachCountryTimeLineData} from '../../../../stores/timeLine/actions';
+import {fetchEachCountryTimeLineData} from '../../../../stores/timeLine/country/actions';
 import React from "react";
 
 export function tableColumnsGenerator(tableData) {
@@ -33,7 +33,7 @@ export function tableRowsGenerator(props) {
                         case 'location' :
                             return (
                                 <TableCell key={column.id}
-                                           onClick={()=>renderChartOfCountry(row.CountryCode)}
+                                           onClick={() => renderChartOfCountry(row.CountryCode)}
                                            className={glob ? classes.globeRow : {}}
                                            align={column.align}>
                                     <div>

@@ -6,7 +6,7 @@ export const useRowStyles = makeStyles({
         '& > *': {
             borderBottom: 'unset',
         },
-        marginTop:100
+        marginTop:30
     },
     globe:{
         backgroundColor: '#1565C0',

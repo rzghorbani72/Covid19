@@ -1,7 +1,7 @@
-import {takeLatest, put, call, select} from 'redux-saga/effects'
+import {takeLatest, put, call} from 'redux-saga/effects'
 import {FETCH_DATA} from './types'
-import {request} from '../../services/request';
-import {api} from '../../services/api';
+import {request} from '../../../services/request';
+import {api} from '../../../services/api';
 import {isEmpty, isObject} from 'lodash'
 import {fetchEachCountryTimeLineDataSuccess, fetchEachCountryTimeLineDataFail} from './actions';
 

@@ -1,13 +1,10 @@
 import {FETCH_DATA,FETCH_SUCCESS,FETCH_FAIL} from './types';
-import _ from 'lodash';
-import {base_url_thevirustracker} from "../../constants/config";
-
 const initialState = {
     data: {},
     loading: false
 };
 
-export default function timeLine(state = initialState, action) {
+export default function fullTimeLine(state = initialState, action) {
     switch (action.type) {
         case FETCH_DATA:
             return {

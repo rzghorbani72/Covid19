@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import _ from 'lodash';
 
 //material-ui components
@@ -9,18 +9,18 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+
 import {tableRowsGenerator, tableColumnsGenerator} from './widgets'
 import {renderChart} from './ChartRenderer'
-import TextField from '@material-ui/core/TextField';
 
 import moment from "moment";
 import {connect} from 'react-redux'
-
-import {useRowStyles} from './Style'
-import timeLine from "../../../../stores/timeLine/reducer";
+import {fetchFullCountryTimeLineData} from '../../../../stores/timeLine/full/actions';
+import {useRowStyles} from './Style';
 
 const mapStateToProps = state => ({
-    timeLine: state.timeLine
+    timeLine: state.timeLine,
+    fullTimeLine: state.fullTimeLine
 });
 let table_column = [
     {
@@ -28,7 +28,6 @@ let table_column = [
         label: 'Location',
         minWidth: 100,
         align: 'left',
-        // format: (value) => value.toLocaleString('en-US')
     },
     {
         id: 'cases',
@@ -108,18 +107,27 @@ function ReportTable(props) {
         const {timeLine} = props
         if (!_.isEmpty(timeLine.data) && !timeLine.loading) {
             let array = [];
-            timeLine.data.timelineitems.map(item=>{
+            timeLine.data.timelineitems.map(item => {
                 _.mapKeys(item, (value, key) => {
-                    if(_.isObject(value)){
+                    if (_.isObject(value)) {
                         value.date = key
                         array.push(value);
                     }
                 });
             });
-            renderChart(array);
+            renderChart(array, 'total_deaths');
         }
     }, [props.timeLine]);
 
+    useMemo(() => {
+        const {fullTimeLine, dispatch} = props
+        if (!_.isEmpty(fullTimeLine.data) && !fullTimeLine.loading) {
+            renderChart(fullTimeLine.data.data, 'deaths');
+        }
+        if (_.isEmpty(fullTimeLine.data) && !fullTimeLine.loading) {
+            dispatch(fetchFullCountryTimeLineData())
+        }
+    }, [props.fullTimeLine]);
     return (
         <>
             <Paper className={classes.root}>

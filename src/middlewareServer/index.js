@@ -5,6 +5,7 @@ const express = require('express'),
 const app = express()
 const port = 9000
 app.use(cors())
+
 function fetchData(url) {
     return rp(
         {
@@ -17,7 +18,12 @@ function fetchData(url) {
 app.get('/timeline/:code', async (req, res) => {
     const code = req.params.code
     console.log('/timeline/' + code)
-    const result = await fetchData(`https://thevirustracker.com/free-api?countryTimeline=${code}`)
+    let result;
+    if (code === 'full') {
+        result = await fetchData(`https://thevirustracker.com/timeline/map-data.json`)
+    } else {
+        result = await fetchData(`https://thevirustracker.com/free-api?countryTimeline=${code}`)
+    }
     return res.json(result)
 })
 
