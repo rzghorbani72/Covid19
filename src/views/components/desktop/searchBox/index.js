@@ -8,7 +8,6 @@ export function Search(props) {
     const [searchData, setSearchData] = useState([])
     const renderChartOfCountry = (code) => {
         const {dispatch} = props;
-        debugger
         dispatch(fetchEachCountryTimeLineData(code));
     }
     useEffect(() => {
@@ -42,6 +41,9 @@ export function Search(props) {
     const promiseOptions = (inputValue) => new Promise(resolve => setTimeout(() => resolve(searchUsers(inputValue)), 500));
 
     return <AsyncSelect
+        placeholder={<div>Type to search</div>}
+        noOptionsMessage={() => 'search countries'}
+        formatCreateLabel={() => `nothing found`}
         cacheOptions
         defaultOptions={searchData}
         loadOptions={promiseOptions}

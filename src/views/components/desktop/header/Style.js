@@ -13,9 +13,8 @@ export const useStyles = makeStyles({
 //         background: '#3494E6',
 // background: '-webkit-linear-gradient(to right, #EC6EAD, #3494E6)',
         background: 'linear-gradient(to right, #EC6EAD, #3494E6)'
-
     },
     head: {
-        fontSize: 10
+        fontSize: 16
     }
 });

@@ -11,12 +11,12 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Skeleton from "@material-ui/lab/Skeleton";
 
-import {tableRowsGenerator, tableColumnsGenerator, tableLoadingRowsGenerator} from './widgets'
+import {TableRowsGenerator, TableColumnsGenerator, TableLoadingRowsGenerator} from './widgets'
 import {renderChart} from './ChartRenderer'
 
 import moment from "moment";
 import {connect} from 'react-redux'
-import {fetchTotalTimeLineData} from '../../../../stores/timeLine/total/actions';
+import {fetchEachCountryTimeLineData} from '../../../../stores/timeLine/country/actions';
 import {useRowStyles} from './Style';
 import {Search} from '../searchBox';
 import {Grid} from "@material-ui/core";
@@ -56,7 +56,13 @@ function ReportTable(props) {
     const {tableLoading} = props;
     const [ascending, setAscending] = useState({TotalDeaths: true})
     const [updateDate, setUpdateDate] = useState('');
-    const [isLoading, setIsLoading] = useState(true)
+    const [isCountryLoading, setIsCountryLoading] = useState(false)
+    const [isTotalLoading, setIsTotalLoading] = useState(true)
+    const [countryCode, setCountryCode] = useState("");
+    const [selectedCountry, setSelectedCountry] = useState({
+        columns: table_column,
+        data: [],
+    });
     const [tableData, setTableData] = useState({
         columns: table_column,
         data: [],
@@ -99,9 +105,18 @@ function ReportTable(props) {
     }, [props.data]);
 
     useMemo(() => {
-        const {countryTimeLine} = props
-        setIsLoading(countryTimeLine.loading);
-        if (!_.isEmpty(countryTimeLine.data) && _.has(countryTimeLine.data, 'timelineitems') && !countryTimeLine.loading) {
+        const {totalTimeLine} = props;
+        setIsTotalLoading(totalTimeLine.loading);
+    }, [props.totalTimeLine.loading]);
+
+    useMemo(() => {
+        const {countryTimeLine} = props;
+        setIsCountryLoading(countryTimeLine.loading);
+    }, [props.countryTimeLine.loading]);
+
+    useMemo(() => {
+        const {countryTimeLine, dispatch} = props
+        if (!_.isEmpty(countryTimeLine.data) && _.has(countryTimeLine.data, 'timelineitems') && !isCountryLoading) {
             let array = [];
             countryTimeLine.data.timelineitems.map(item => {
                 _.mapKeys(item, (value, key) => {
@@ -111,20 +126,24 @@ function ReportTable(props) {
                     }
                 });
             });
+            const code = countryTimeLine.data.countrytimelinedata[0].info.code
+            setCountryCode(code);
+            setSelectedCountry({columns: table_column, data: [_.find(tableData.data, {CountryCode: code})],})
             renderChart(array, 'total_deaths');
         }
-    }, [props.countryTimeLine]);
+        if (_.isEmpty(countryTimeLine.data) && !isCountryLoading) {
+            dispatch(fetchEachCountryTimeLineData('IR'))
+        }
+    }, [props.countryTimeLine, isCountryLoading]);
 
     useMemo(() => {
-        const {totalTimeLine, dispatch} = props
-        setIsLoading(totalTimeLine.loading);
-        if (!_.isEmpty(totalTimeLine.data) && !_.isEmpty(totalTimeLine.data.data) && !totalTimeLine.loading) {
+        const {totalTimeLine} = props
+        if (!_.isEmpty(totalTimeLine.data) && !_.isEmpty(totalTimeLine.data.data) && !isTotalLoading) {
             renderChart(totalTimeLine.data.data, 'deaths');
         }
-        if (_.isEmpty(totalTimeLine.data) && !totalTimeLine.loading) {
-            dispatch(fetchTotalTimeLineData())
-        }
-    }, [props.totalTimeLine]);
+
+    }, [props.totalTimeLine, isTotalLoading]);
+
     return (
         <>
             <Paper className={classes.root}>
@@ -137,7 +156,13 @@ function ReportTable(props) {
                                 <Grid container justify="left">
                                     <Grid item xs={6} md={3} lg={2} xl={1}>chart</Grid>
                                     <Grid item xs={6} md={3} lg={2} xl={1}
-                                          style={{position: 'absolute', zIndex: 10, left: '30%', width: '50%'}}>
+                                          style={{
+                                              position: 'absolute',
+                                              zIndex: 10,
+                                              left: '30%',
+                                              marginTop: '-7px',
+                                              width: '50%'
+                                          }}>
                                         {!_.isEmpty(tableData.data) &&
                                         <Search data={tableData.data} dispatch={props.dispatch}/>}
                                     </Grid>
@@ -145,14 +170,34 @@ function ReportTable(props) {
                             </TableCell>
                         </TableHead>
                         <TableBody>
-                            {isLoading &&
                             <div className="row">
+                                <TableContainer className={classes.container}>
+                                    <Table stickyHeader aria-label="sticky table">
+                                        <TableHead>
+                                            <TableRow>
+                                                {TableColumnsGenerator(tableGlobalData, classes)}
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {!_.isEmpty(selectedCountry.data) && !_.isEmpty(selectedCountry.data[0]) && !(isTotalLoading || isCountryLoading) ?
+                                                <TableRowsGenerator
+                                                    tableData={selectedCountry}
+                                                    classes={classes}
+                                                    glob={false}  {...props}/> :
+                                                <TableRowsGenerator
+                                                    tableData={{column: table_column, data: []}}
+                                                    classes={classes}
+                                                    glob={false}  {...props}/>}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
                                 <div className="col-xl-12 text-center">
-                                    <Skeleton animation="wave" height={300} width="100%"/>
+                                    {(isTotalLoading || isCountryLoading) &&
+                                    <Skeleton animation="wave" height={300} width="100%"/>}
+                                    <div id='Report_Chart'
+                                         style={{display: (isTotalLoading || isCountryLoading) ? 'none' : 'block'}}/>
                                 </div>
                             </div>
-                            }
-                            {<div id='Report_Chart'/>}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -162,32 +207,28 @@ function ReportTable(props) {
                     <Table stickyHeader aria-label="sticky table" className={classes.globe}>
                         <TableHead>
                             <TableRow>
-                                {tableColumnsGenerator(tableGlobalData, classes)}
+                                {TableColumnsGenerator(tableGlobalData, classes)}
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {!_.isEmpty(tableGlobalData.data) && tableRowsGenerator({
-                                tableData: tableGlobalData,
-                                classes,
-                                glob: true, ...props
-                            })}
+                            {!_.isEmpty(tableGlobalData.data) && <TableRowsGenerator
+                                tableData={tableGlobalData}
+                                classes={classes}
+                                glob={true}
+                                {...props}/>}
                         </TableBody>
                     </Table>
                     <div className={classes.date}><span>updated {updateDate.ago} at {updateDate.date}</span></div>
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
-                                {tableColumnsGenerator(tableData, classes)}
+                                {TableColumnsGenerator(tableData, classes)}
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {tableLoading && _.isEmpty(tableData.data) ?
-                                tableLoadingRowsGenerator()
-                                : tableRowsGenerator({
-                                    tableData,
-                                    classes,
-                                    glob: false, ...props
-                                })}
+                                TableLoadingRowsGenerator()
+                                : <TableRowsGenerator tableData={tableData} classes={classes} glob={false} {...props}/>}
                         </TableBody>
                     </Table>
                 </TableContainer>

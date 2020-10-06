@@ -1,13 +1,15 @@
+import React, {useEffect, useMemo, useState} from "react";
+import _ from 'lodash';
+
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import PublicSharpIcon from "@material-ui/icons/PublicSharp";
 import ReactCountryFlag from "react-country-flag";
 import {fetchEachCountryTimeLineData} from '../../../../stores/timeLine/country/actions';
-import React from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import {fetchTotalTimeLineData} from "../../../../stores/timeLine/total/actions";
 
-export function tableColumnsGenerator(tableData) {
+export function TableColumnsGenerator(tableData) {
     return tableData.columns.map((column, key) => {
         return (
             <TableCell
@@ -21,8 +23,8 @@ export function tableColumnsGenerator(tableData) {
     })
 }
 
-export function tableLoadingRowsGenerator() {
-    return Array.from(new Array(3)).map((row, key) => {
+export function TableLoadingRowsGenerator() {
+    return Array.from(new Array(2)).map((row, key) => {
         return (
             <TableRow tabIndex={-1}>
                 <TableCell>
@@ -42,8 +44,8 @@ export function tableLoadingRowsGenerator() {
     });
 }
 
-export function tableRowsGenerator(props) {
-    const {tableData, classes, glob} = props
+export function TableRowsGenerator(props) {
+    const {tableData, classes, glob} = props;
     const renderChartOfCountry = (code) => {
         const {dispatch} = props;
         dispatch(fetchEachCountryTimeLineData(code));
@@ -52,7 +54,7 @@ export function tableRowsGenerator(props) {
         const {dispatch} = props
         dispatch(fetchTotalTimeLineData())
     }
-    return tableData.data.map((row) => {
+    return !_.isEmpty(tableData.data) && tableData.data.map((row) => {
         return (
             <TableRow hover tabIndex={-1}>
                 {tableData.columns.map((column) => {
@@ -80,7 +82,7 @@ export function tableRowsGenerator(props) {
                                         {row.Country === 'world wide' ?
                                             <a onClick={getWorldTimeLine} className={classes.worldActive}>world
                                                 wide</a> : <a onClick={() => renderChartOfCountry(row.CountryCode)}
-                                                              class={classes.active}>{row.Country}</a>}
+                                                              className={classes.active}>{row.Country}</a>}
                                     </div>
                                 </TableCell>
                             );

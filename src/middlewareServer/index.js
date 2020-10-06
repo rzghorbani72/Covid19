@@ -4,7 +4,6 @@ const express = require('express'),
     cors = require('cors')
 const app = express()
 const port = 9000
-app.use(cors())
 
 function fetchData(url) {
     return rp(
@@ -14,7 +13,8 @@ function fetchData(url) {
             json: true
         });
 }
-
+app.use(cors())
+app.options('*', cors())
 app.get('/timeline/:code', async (req, res) => {
     const code = req.params.code
     console.log('/timeline/' + code)
