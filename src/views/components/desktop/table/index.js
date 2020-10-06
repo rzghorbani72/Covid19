@@ -16,14 +16,14 @@ import {renderChart} from './ChartRenderer'
 
 import moment from "moment";
 import {connect} from 'react-redux'
-import {fetchFullCountryTimeLineData} from '../../../../stores/timeLine/full/actions';
+import {fetchTotalTimeLineData} from '../../../../stores/timeLine/total/actions';
 import {useRowStyles} from './Style';
 import {Search} from '../searchBox';
 import {Grid} from "@material-ui/core";
 
 const mapStateToProps = state => ({
-    timeLine: state.timeLine,
-    fullTimeLine: state.fullTimeLine
+    countryTimeLine: state.countryTimeLine,
+    totalTimeLine: state.totalTimeLine
 });
 let table_column = [
     {
@@ -65,16 +65,6 @@ function ReportTable(props) {
         columns: table_column,
         data: [],
     });
-    const filterTableRows = (country) => {
-        const regex = new RegExp(`(${country}).*`, "gi");
-        setTimeout(() => {
-            const filtered = _.filter(props.data, obj => obj.Country.match(regex))
-            filtered.map(item => item.open = false)
-            let sorted = _.sortBy(filtered, "NewDeaths");
-            sorted.map(item => item.open = false);
-            setTableData(createTableDataStructure(filtered));
-        }, 500);
-    }
     const sortArray = (by = 'TotalDeaths') => {
         let isAsc = true;
         if (_.has(ascending, by)) {
@@ -109,12 +99,11 @@ function ReportTable(props) {
     }, [props.data]);
 
     useMemo(() => {
-        const {timeLine} = props
-        setIsLoading(timeLine.loading);
-        if (!_.isEmpty(timeLine.data) && _.has(timeLine.data, 'timelineitems') && !timeLine.loading) {
+        const {countryTimeLine} = props
+        setIsLoading(countryTimeLine.loading);
+        if (!_.isEmpty(countryTimeLine.data) && _.has(countryTimeLine.data, 'timelineitems') && !countryTimeLine.loading) {
             let array = [];
-            debugger
-            timeLine.data.timelineitems.map(item => {
+            countryTimeLine.data.timelineitems.map(item => {
                 _.mapKeys(item, (value, key) => {
                     if (_.isObject(value)) {
                         value.date = key
@@ -124,18 +113,18 @@ function ReportTable(props) {
             });
             renderChart(array, 'total_deaths');
         }
-    }, [props.timeLine]);
+    }, [props.countryTimeLine]);
 
     useMemo(() => {
-        const {fullTimeLine, dispatch} = props
-        setIsLoading(fullTimeLine.loading);
-        if (!_.isEmpty(fullTimeLine.data) && !fullTimeLine.loading) {
-            renderChart(fullTimeLine.data.data, 'deaths');
+        const {totalTimeLine, dispatch} = props
+        setIsLoading(totalTimeLine.loading);
+        if (!_.isEmpty(totalTimeLine.data) && !_.isEmpty(totalTimeLine.data.data) && !totalTimeLine.loading) {
+            renderChart(totalTimeLine.data.data, 'deaths');
         }
-        if (_.isEmpty(fullTimeLine.data) && !fullTimeLine.loading) {
-            dispatch(fetchFullCountryTimeLineData())
+        if (_.isEmpty(totalTimeLine.data) && !totalTimeLine.loading) {
+            dispatch(fetchTotalTimeLineData())
         }
-    }, [props.fullTimeLine]);
+    }, [props.totalTimeLine]);
     return (
         <>
             <Paper className={classes.root}>
@@ -147,7 +136,11 @@ function ReportTable(props) {
                             >
                                 <Grid container justify="left">
                                     <Grid item xs={6} md={3} lg={2} xl={1}>chart</Grid>
-                                    <Grid item xs={6} md={3} lg={2} xl={1}><Search/></Grid>
+                                    <Grid item xs={6} md={3} lg={2} xl={1}
+                                          style={{position: 'absolute', zIndex: 10, left: '30%', width: '50%'}}>
+                                        {!_.isEmpty(tableData.data) &&
+                                        <Search data={tableData.data} dispatch={props.dispatch}/>}
+                                    </Grid>
                                 </Grid>
                             </TableCell>
                         </TableHead>
@@ -159,7 +152,7 @@ function ReportTable(props) {
                                 </div>
                             </div>
                             }
-                            <div id='Report_Chart'/>
+                            {<div id='Report_Chart'/>}
                         </TableBody>
                     </Table>
                 </TableContainer>

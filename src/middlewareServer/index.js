@@ -19,7 +19,7 @@ app.get('/timeline/:code', async (req, res) => {
     const code = req.params.code
     console.log('/timeline/' + code)
     let result;
-    if (code === 'full') {
+    if (code === 'total') {
         result = await fetchData(`https://thevirustracker.com/timeline/map-data.json`)
     } else {
         result = await fetchData(`https://thevirustracker.com/free-api?countryTimeline=${code}`)

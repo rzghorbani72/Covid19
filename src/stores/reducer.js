@@ -1,12 +1,12 @@
 import {combineReducers} from 'redux';
-import timeLine from './timeLine/country/reducer';
-import fullTimeLine from './timeLine/full/reducer';
+import countryTimeLine from './timeLine/country/reducer';
+import totalTimeLine from './timeLine/total/reducer';
 import summary from './summary/reducer';
 
 export default function createReducer() {
     return combineReducers({
-        timeLine,
-        fullTimeLine,
+        countryTimeLine,
+        totalTimeLine,
         summary
     });
 }

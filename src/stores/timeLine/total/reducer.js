@@ -4,7 +4,7 @@ const initialState = {
     loading: false
 };
 
-export default function fullTimeLine(state = initialState, action) {
+export default function totalTimeLine(state = initialState, action) {
     switch (action.type) {
         case FETCH_DATA:
             return {

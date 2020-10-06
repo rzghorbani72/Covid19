@@ -5,7 +5,7 @@ import ReactCountryFlag from "react-country-flag";
 import {fetchEachCountryTimeLineData} from '../../../../stores/timeLine/country/actions';
 import React from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
-import {fetchFullCountryTimeLineData} from "../../../../stores/timeLine/full/actions";
+import {fetchTotalTimeLineData} from "../../../../stores/timeLine/total/actions";
 
 export function tableColumnsGenerator(tableData) {
     return tableData.columns.map((column, key) => {
@@ -50,7 +50,7 @@ export function tableRowsGenerator(props) {
     }
     const getWorldTimeLine = () => {
         const {dispatch} = props
-        dispatch(fetchFullCountryTimeLineData())
+        dispatch(fetchTotalTimeLineData())
     }
     return tableData.data.map((row) => {
         return (
@@ -78,7 +78,9 @@ export function tableRowsGenerator(props) {
                                                 aria-label={row.Country}
                                             />}
                                         {row.Country === 'world wide' ?
-                                            <a onClick={getWorldTimeLine} class={classes.worldActive}>world wide</a> : <a onClick={() => renderChartOfCountry(row.CountryCode)} class={classes.active}>{row.Country}</a>}
+                                            <a onClick={getWorldTimeLine} className={classes.worldActive}>world
+                                                wide</a> : <a onClick={() => renderChartOfCountry(row.CountryCode)}
+                                                              class={classes.active}>{row.Country}</a>}
                                     </div>
                                 </TableCell>
                             );

@@ -12,6 +12,7 @@ function am4themes_myTheme(target) {
 }
 
 export function renderChart(values=[],yAxisLabel) {
+    debugger
     let chart = am4core.create(`Report_Chart`, am4charts.XYChart);
     chart.data = values;
     chart.logo.height = -15000

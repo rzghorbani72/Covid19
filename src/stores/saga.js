@@ -1,12 +1,12 @@
 import {all} from 'redux-saga/effects';
-import TimeLine from "./timeLine/country/saga";
-import FullTimeLine from "./timeLine/full/saga";
+import CountryTimeLine from "./timeLine/country/saga";
+import TotalTimeLine from "./timeLine/total/saga";
 import GetSummary from "./summary/saga";
 
 export default function* AppSaga() {
     yield all([
-        TimeLine(),
-        FullTimeLine(),
+        CountryTimeLine(),
+        TotalTimeLine(),
         GetSummary()
     ]);
 }

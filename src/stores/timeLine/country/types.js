@@ -1,3 +1,3 @@
-export const FETCH_DATA = 'timeLine/fetch_data';
-export const FETCH_SUCCESS = 'timeLine/fetch_success';
-export const FETCH_FAIL = 'timeLine/fetch_fail';
+export const FETCH_DATA = 'countryTimeLine/fetch_data';
+export const FETCH_SUCCESS = 'countryTimeLine/fetch_success';
+export const FETCH_FAIL = 'countryTimeLine/fetch_fail';
