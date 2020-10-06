@@ -1,6 +1,7 @@
 {
   "name": "covid19_reza_ghorbani",
   "version": "0.1.0",
+  "main": "./src/middlewareServer/index.js",
   "private": true,
   "dependencies": {
     "@amcharts/amcharts4": "^4.10.2",
@@ -13,10 +14,12 @@
     "axios": "^0.20.0",
     "bluebird": "^3.7.2",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "lodash": "^4.17.20",
     "material-table": "^1.69.0",
     "moment": "^2.27.0",
+    "pm2": "^4.5.0",
     "react": "^16.13.1",
     "react-country-flag": "^2.3.0",
     "react-dom": "^16.13.1",
@@ -31,6 +34,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "prod": "env REACT_APP_ENV=production npm start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

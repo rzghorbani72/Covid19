@@ -21,6 +21,6 @@ run react server
 default port = 3000
 
 ```bash
-npm start
+bash exec.sh
 ```
 open http://localhost:3000

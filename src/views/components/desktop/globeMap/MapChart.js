@@ -61,11 +61,11 @@ const MapChart = (props) => {
                                             outline: "none"
                                         },
                                         hover: {
-                                            fill: "#CDDC39",
+                                            fill: "#FF5722",
                                             outline: "none"
                                         },
                                         pressed: {
-                                            fill: "#8BC34A",
+                                            fill: "#FF5722",
                                             outline: "none"
                                         }
                                     }}

@@ -26,7 +26,7 @@ export function TableColumnsGenerator(tableData) {
 export function TableLoadingRowsGenerator() {
     return Array.from(new Array(2)).map((row, key) => {
         return (
-            <TableRow tabIndex={-1}>
+            <TableRow tabIndex={-1} key={key}>
                 <TableCell>
                     <Skeleton animation="wave" height={100} width="100%"/>
                 </TableCell>
@@ -54,9 +54,9 @@ export function TableRowsGenerator(props) {
         const {dispatch} = props
         dispatch(fetchTotalTimeLineData())
     }
-    return !_.isEmpty(tableData.data) && tableData.data.map((row) => {
+    return !_.isEmpty(tableData.data) && tableData.data.map((row,key) => {
         return (
-            <TableRow hover tabIndex={-1}>
+            <TableRow hover tabIndex={-1} key={key}>
                 {tableData.columns.map((column) => {
                     switch (column.id) {
                         case 'location' :
